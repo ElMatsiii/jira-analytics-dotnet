@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>JiraAi.Analytics.UnitTests</RootNamespace>
+    <CollectCoverage>true</CollectCoverage>
+    <CoverletOutputFormat>cobertura,opencover,json</CoverletOutputFormat>
+    <CoverletOutput>../../coverage/</CoverletOutput>
+    <Threshold>60</Threshold>
+    <ThresholdType>line,branch,method</ThresholdType>
+    <ThresholdStat>total</ThresholdStat>
+    <Exclude>[JiraAi.Analytics.Contracts]*</Exclude>
+    <ExcludeByFile>**/Program.cs</ExcludeByFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\JiraAi.Analytics.Contracts\JiraAi.Analytics.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\JiraAi.Analytics.Domain\JiraAi.Analytics.Domain.csproj" />
+    <ProjectReference Include="..\..\src\JiraAi.Analytics.Infrastructure\JiraAi.Analytics.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\JiraAi.Analytics.Worker\JiraAi.Analytics.Worker.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+
+    <PackageReference Include="NSubstitute" Version="5.1.0" />
+    <PackageReference Include="FluentAssertions" Version="6.12.1" />
+    <PackageReference Include="Grpc.Core.Testing" Version="2.46.6" />
+
+    <PackageReference Include="coverlet.collector" Version="6.0.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.msbuild" Version="6.0.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{29CDDD0B-747B-4094-ABD3-A135E0CF1EE1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JiraAi.Analytics.Contracts", "src\JiraAi.Analytics.Contracts\JiraAi.Analytics.Contracts.csproj", "{705AC77D-A435-49E6-AD23-F66DCBFC6E47}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JiraAi.Analytics.Domain", "src\JiraAi.Analytics.Domain\JiraAi.Analytics.Domain.csproj", "{E8732CF1-0B60-49A8-ACE4-CB5141B277F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JiraAi.Analytics.Infrastructure", "src\JiraAi.Analytics.Infrastructure\JiraAi.Analytics.Infrastructure.csproj", "{B235C793-A7EB-4416-AAA3-E9DB0F1CE934}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JiraAi.Analytics.Worker", "src\JiraAi.Analytics.Worker\JiraAi.Analytics.Worker.csproj", "{EBBCE525-4244-4129-994F-86A13BD394E3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{284F3D97-1FEA-4494-90E0-968CE9423E70}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JiraAi.Analytics.UnitTests", "tests\JiraAi.Analytics.UnitTests\JiraAi.Analytics.UnitTests.csproj", "{7901E046-308F-4400-AEBD-F2D10955010B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{705AC77D-A435-49E6-AD23-F66DCBFC6E47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{705AC77D-A435-49E6-AD23-F66DCBFC6E47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{705AC77D-A435-49E6-AD23-F66DCBFC6E47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{705AC77D-A435-49E6-AD23-F66DCBFC6E47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8732CF1-0B60-49A8-ACE4-CB5141B277F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8732CF1-0B60-49A8-ACE4-CB5141B277F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8732CF1-0B60-49A8-ACE4-CB5141B277F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8732CF1-0B60-49A8-ACE4-CB5141B277F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B235C793-A7EB-4416-AAA3-E9DB0F1CE934}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B235C793-A7EB-4416-AAA3-E9DB0F1CE934}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B235C793-A7EB-4416-AAA3-E9DB0F1CE934}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B235C793-A7EB-4416-AAA3-E9DB0F1CE934}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBBCE525-4244-4129-994F-86A13BD394E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBBCE525-4244-4129-994F-86A13BD394E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBBCE525-4244-4129-994F-86A13BD394E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBBCE525-4244-4129-994F-86A13BD394E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7901E046-308F-4400-AEBD-F2D10955010B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7901E046-308F-4400-AEBD-F2D10955010B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7901E046-308F-4400-AEBD-F2D10955010B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7901E046-308F-4400-AEBD-F2D10955010B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{705AC77D-A435-49E6-AD23-F66DCBFC6E47} = {29CDDD0B-747B-4094-ABD3-A135E0CF1EE1}
+		{E8732CF1-0B60-49A8-ACE4-CB5141B277F3} = {29CDDD0B-747B-4094-ABD3-A135E0CF1EE1}
+		{B235C793-A7EB-4416-AAA3-E9DB0F1CE934} = {29CDDD0B-747B-4094-ABD3-A135E0CF1EE1}
+		{EBBCE525-4244-4129-994F-86A13BD394E3} = {29CDDD0B-747B-4094-ABD3-A135E0CF1EE1}
+		{7901E046-308F-4400-AEBD-F2D10955010B} = {284F3D97-1FEA-4494-90E0-968CE9423E70}
+	EndGlobalSection
+EndGlobal

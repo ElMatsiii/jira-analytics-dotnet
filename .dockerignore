@@ -1,0 +1,9 @@
+**/.git
+**/.github
+**/.vs
+**/bin
+**/obj
+**/TestResults
+**/coverage
+**/*.user
+**/*.suo

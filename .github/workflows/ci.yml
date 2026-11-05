@@ -1,0 +1,83 @@
+name: CI (jira-analytics-dotnet)
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'jira-analytics-dotnet/**'
+      - '.github/workflows/ci.yml'
+  pull_request:
+    branches:
+      - main
+      - master
+    paths:
+      - 'jira-analytics-dotnet/**'
+      - '.github/workflows/ci.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-and-coverage:
+    name: .NET 8 Test & Coverage Enforcement (>= 60%)
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: jira-analytics-dotnet
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Cache NuGet Packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('jira-analytics-dotnet/**/*.csproj', 'jira-analytics-dotnet/**/*.sln') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore Dependencies
+        run: dotnet restore jira-analytics-dotnet.sln
+
+      - name: Build Solution
+        run: dotnet build jira-analytics-dotnet.sln -c Release --no-restore
+
+      - name: Run Tests with Coverlet Coverage Profile
+        run: >
+          dotnet test tests/JiraAi.Analytics.UnitTests/JiraAi.Analytics.UnitTests.csproj
+          -c Release
+          --no-build
+          /p:CollectCoverage=true
+          /p:CoverletOutputFormat=cobertura%2Copencover%2Cjson
+          /p:CoverletOutput=../../coverage/
+          /p:Threshold=60
+          /p:ThresholdType=line%2Cbranch%2Cmethod
+          /p:ThresholdStat=total
+          /p:Exclude="[JiraAi.Analytics.Contracts]*"
+          /p:ExcludeByFile="**/Program.cs"
+
+      - name: Enforce >= 60% Coverage Threshold Gate
+        run: |
+          chmod +x scripts/check-coverage.sh
+          ./scripts/check-coverage.sh coverage/coverage.cobertura.xml 60.0
+
+      - name: Upload Coverage Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jira-analytics-dotnet-coverage
+          path: |
+            jira-analytics-dotnet/coverage/
+            jira-analytics-dotnet/TestResults/
+          retention-days: 14
