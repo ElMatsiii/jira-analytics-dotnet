@@ -1,4 +1,4 @@
-# 🟣 MS3: Jira Analytics Service (`jira-analytics-dotnet`)
+# MS3: Jira Analytics Service (`jira-analytics-dotnet`)
 
 [![.NET Version](https://img.shields.io/badge/.NET-8.0-512BD4.svg?logo=dotnet)]()
 [![C#](https://img.shields.io/badge/C%23-12-239120.svg?logo=csharp)]()
@@ -10,7 +10,7 @@ Microservicio analítico y motor de métricas de alto rendimiento desarrollado e
 
 ---
 
-## 🏛️ Rol en la Arquitectura e Interoperabilidad
+## Rol en la Arquitectura e Interoperabilidad
 
 ```mermaid
 flowchart TD
@@ -24,7 +24,7 @@ flowchart TD
     
     DOM --- MONGODB[("MongoDB 7.0\n(analytics_db)")]
     
-    DOM -.->|"gRPC :50052\n(AlertService.TriggerSprintAlert)"| NEST["🔶 MS2: Sprints (NestJS)"]
+    DOM -.->|"gRPC :50052\n(AlertService.TriggerSprintAlert)"| NEST["MS2: Sprints (NestJS)"]
 ```
 
 ### Protocolos de Entrada y Salida (Regla de la Pizarra)
@@ -39,7 +39,7 @@ flowchart TD
 
 ---
 
-## 📂 Estructura de la Solución (Clean Architecture)
+## Estructura de la Solución (Clean Architecture)
 
 ```text
 jira-analytics-dotnet/
@@ -69,7 +69,7 @@ jira-analytics-dotnet/
 
 ---
 
-## ⚙️ Configuración y Variables de Entorno
+## Configuración y Variables de Entorno
 
 | Variable | Descripción | Valor por Defecto |
 | :--- | :--- | :--- |
@@ -84,7 +84,7 @@ jira-analytics-dotnet/
 
 ---
 
-## 🧪 Pruebas Automatizadas y Cobertura
+## Pruebas Automatizadas y Cobertura
 
 El proyecto incluye tests unitarios exhaustivos para los motores de cálculo, algoritmos de burndown, deserialización tolerante a fallos y clientes de mensajería:
 
@@ -105,7 +105,7 @@ dotnet test --no-build -c Release --collect:"XPlat Code Coverage"
 
 ---
 
-## 🐳 Despliegue con Docker
+## Despliegue con Docker
 
 El microservicio utiliza una imagen optimizada de ejecución basada en `mcr.microsoft.com/dotnet/aspnet:8.0`:
 
@@ -123,6 +123,6 @@ docker run -d \
 
 ---
 
-## 📄 Licencia
+## Licencia
 
-MIT License © 2026 Jira AI Team.
+MIT License (c) 2026 Jira AI Team.
