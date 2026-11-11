@@ -1,5 +1,6 @@
 namespace JiraAi.Analytics.Domain.Services;
 
+using System.Globalization;
 using JiraAi.Analytics.Domain.Models;
 using JiraAi.Contracts.Sprints.V1;
 
@@ -22,13 +23,14 @@ public class RiskDetectionEngine : IRiskDetectionEngine
         {
             double increasePct = Math.Round(
                 ((double)(snapshot.TotalStoryPoints - snapshot.InitialCommittedPoints) / snapshot.InitialCommittedPoints) * 100.0, 1);
+            var formattedIncreasePct = increasePct.ToString("F1", CultureInfo.InvariantCulture);
 
             risks.Add(new RiskAssessment
             {
                 Type = AlertType.ScopeCreep,
                 Severity = increasePct >= 50.0 ? AlertSeverity.Critical : AlertSeverity.Warning,
                 Title = "Scope Creep Detected",
-                Message = $"Scope creep of {increasePct:F1}% detected (threshold: 20%). Current total: {snapshot.TotalStoryPoints} pts vs initial: {snapshot.InitialCommittedPoints} pts.",
+                Message = $"Scope creep of {formattedIncreasePct}% detected (threshold: 20%). Current total: {snapshot.TotalStoryPoints} pts vs initial: {snapshot.InitialCommittedPoints} pts.",
                 Recommendation = "Review newly added scope and consider moving low-priority stories to backlog.",
                 MetricValue = increasePct
             });

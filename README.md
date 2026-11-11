@@ -73,14 +73,12 @@ jira-analytics-dotnet/
 
 | Variable | Descripción | Valor por Defecto |
 | :--- | :--- | :--- |
-| `Kafka__BootstrapServers` | Servidores Kafka | `localhost:9092` |
-| `Kafka__GroupId` | Grupo de consumidores Kafka | `analytics-worker-group` |
-| `Kafka__QueryTopic` | Tópico de consulta de métricas | `analytics.query` |
-| `Kafka__ReplyTopic` | Tópico de respuesta de métricas | `analytics.reply` |
-| `Kafka__EventsTopic` | Tópico de eventos de incidencias | `issues.events` |
-| `MongoDb__ConnectionString` | Cadena de conexión MongoDB | `mongodb://localhost:27017` |
-| `MongoDb__DatabaseName` | Nombre de la base de datos | `analytics_db` |
-| `Grpc__SprintsServiceUrl` | URL del servicio gRPC de Sprints | `http://localhost:50052` |
+| `KAFKA_BOOTSTRAP_SERVERS` / `KAFKA_BROKERS` | Servidores Kafka | `localhost:9092` |
+| `MONGODB_URI` | Cadena de conexión MongoDB | `mongodb://localhost:27017` |
+| `MONGODB_DATABASE` | Nombre de la base de datos | `analytics_db` |
+| `MS2_GRPC_URL` | Endpoint gRPC del servicio Sprints/AlertService | `http://localhost:50052` |
+
+También se pueden usar las claves de configuración .NET `Kafka__BootstrapServers`, `Mongo__ConnectionString`, `Mongo__DatabaseName` y `AlertService__Endpoint`.
 
 ---
 
@@ -115,9 +113,10 @@ docker build -t jira-ai-analytics-service .
 
 # Ejecutar contenedor
 docker run -d \
-  -e Kafka__BootstrapServers="kafka:9092" \
-  -e MongoDb__ConnectionString="mongodb://mongo-analytics:27017" \
-  -e Grpc__SprintsServiceUrl="http://sprints-service:50052" \
+  -e KAFKA_BOOTSTRAP_SERVERS="kafka:9092" \
+  -e MONGODB_URI="mongodb://mongo-analytics:27017" \
+  -e MONGODB_DATABASE="analytics_db" \
+  -e MS2_GRPC_URL="http://sprints-service:50052" \
   jira-ai-analytics-service
 ```
 
