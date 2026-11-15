@@ -48,9 +48,9 @@ public class InMemorySnapshotRepository : ISnapshotRepository
         return Task.CompletedTask;
     }
 
-    public Task<List<SprintSnapshotDocument>> GetActiveSnapshotsAsync(CancellationToken cancellationToken = default)
+    public Task<List<SprintSnapshotDocument>> GetOpenSnapshotsAsync(CancellationToken cancellationToken = default)
     {
-        var list = _store.Values.Where(x => x.Status == "ACTIVE").ToList();
+        var list = _store.Values.Where(x => !SnapshotStatus.IsClosed(x.Status)).ToList();
         return Task.FromResult(list);
     }
 }

@@ -1,4 +1,5 @@
 namespace JiraAi.Analytics.UnitTests.Grpc;
+using JiraAi.Analytics.Domain.Models;
 
 using FluentAssertions;
 using global::Grpc.Core;
@@ -57,8 +58,8 @@ public class AlertClientServiceTests
         // Act
         var result = await sut.TriggerSprintAlertAsync(
             sprintId: "sprint-sc-1",
-            type: AlertType.ScopeCreep,
-            severity: AlertSeverity.Warning,
+            type: RiskType.ScopeCreep,
+            severity: RiskSeverity.Warning,
             message: "Scope creep > 20%",
             recommendation: "Reprioritize backlog");
 
@@ -69,7 +70,7 @@ public class AlertClientServiceTests
         result.Debounced.Should().BeFalse();
 
         // T1-F23-05: Recorded in audit
-        var lastTime = await _alertRepo.GetLastAlertTimeAsync("sprint-sc-1", AlertType.ScopeCreep.ToString());
+        var lastTime = await _alertRepo.GetLastAlertTimeAsync("sprint-sc-1", RiskType.ScopeCreep.ToString());
         lastTime.Should().NotBeNull();
     }
 
@@ -84,12 +85,12 @@ public class AlertClientServiceTests
         var sut = new AlertClientService(_mockClient, _options, NullLogger<AlertClientService>.Instance, _alertRepo);
 
         // 1st dispatch
-        var result1 = await sut.TriggerSprintAlertAsync("sprint-debounce", AlertType.ScopeCreep, AlertSeverity.Warning, "Creep 1", "Rec 1");
+        var result1 = await sut.TriggerSprintAlertAsync("sprint-debounce", RiskType.ScopeCreep, RiskSeverity.Warning, "Creep 1", "Rec 1");
         result1.Success.Should().BeTrue();
         result1.Debounced.Should().BeFalse();
 
         // 2nd dispatch immediately
-        var result2 = await sut.TriggerSprintAlertAsync("sprint-debounce", AlertType.ScopeCreep, AlertSeverity.Warning, "Creep 2", "Rec 2");
+        var result2 = await sut.TriggerSprintAlertAsync("sprint-debounce", RiskType.ScopeCreep, RiskSeverity.Warning, "Creep 2", "Rec 2");
         result2.Success.Should().BeTrue();
         result2.Debounced.Should().BeTrue(); // Suppressed!
 
@@ -114,8 +115,8 @@ public class AlertClientServiceTests
         // Act
         var result = await sut.TriggerSprintAlertAsync(
             "sprint-down",
-            AlertType.VelocityDeficit,
-            AlertSeverity.Warning,
+            RiskType.VelocityDeficit,
+            RiskSeverity.Warning,
             "Deficit",
             "Rec");
 
@@ -128,7 +129,7 @@ public class AlertClientServiceTests
     public async Task TriggerSprintAlert_EmptySprintId_ThrowsArgumentException()
     {
         var sut = new AlertClientService(_mockClient, _options, NullLogger<AlertClientService>.Instance);
-        var act = async () => await sut.TriggerSprintAlertAsync("", AlertType.ScopeCreep, AlertSeverity.Warning, "msg", "rec");
+        var act = async () => await sut.TriggerSprintAlertAsync("", RiskType.ScopeCreep, RiskSeverity.Warning, "msg", "rec");
         await act.Should().ThrowAsync<ArgumentException>();
     }
 }

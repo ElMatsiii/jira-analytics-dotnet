@@ -4,27 +4,36 @@ using JiraAi.Analytics.Domain.Models;
 
 public interface IVelocityCalculator
 {
-    double CalculateRollingVelocity(IEnumerable<VelocityRecordDocument>? history, int currentCompletedPoints = 0);
+    /// <summary>
+    /// Average completed story points of the last 1..3 CLOSED sprints. The sprint in progress never
+    /// counts (its partial progress is not a velocity); with no closed sprint the result is 0.
+    /// </summary>
+    double CalculateRollingVelocity(IEnumerable<VelocityRecordDocument>? history);
     double CalculateSprintCompletionRate(int completedPoints, int totalPoints);
 }
 
 public class VelocityCalculator : IVelocityCalculator
 {
-    public double CalculateRollingVelocity(IEnumerable<VelocityRecordDocument>? history, int currentCompletedPoints = 0)
-    {
-        if (history == null)
-        {
-            return Math.Max(0.0, currentCompletedPoints);
-        }
+    /// <summary>How many of the most recent closed sprints the rolling velocity averages.</summary>
+    public const int RollingWindowSize = 3;
 
-        var recentList = history
+    /// <summary>
+    /// Number of closed sprints that <see cref="CalculateRollingVelocity"/> averages (velocitySampleSize
+    /// in analytics.reply). 0 means there is no closed sprint, so a velocity of 0 is not a real average.
+    /// </summary>
+    public static int RollingSampleSize(IEnumerable<VelocityRecordDocument>? history) =>
+        Math.Min(RollingWindowSize, history?.Count() ?? 0);
+
+    public double CalculateRollingVelocity(IEnumerable<VelocityRecordDocument>? history)
+    {
+        var recentList = (history ?? Enumerable.Empty<VelocityRecordDocument>())
             .OrderByDescending(x => x.CompletedDate)
-            .Take(3)
+            .Take(RollingWindowSize)
             .ToList();
 
         if (recentList.Count == 0)
         {
-            return Math.Max(0.0, currentCompletedPoints);
+            return 0.0;
         }
 
         // T1-F19-03 & T2-F24-04: Average completed points over last 1..3 sprints

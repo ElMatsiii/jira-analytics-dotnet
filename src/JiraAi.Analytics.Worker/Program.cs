@@ -3,6 +3,7 @@ using JiraAi.Analytics.Domain.Services;
 using JiraAi.Analytics.Infrastructure.Grpc;
 using JiraAi.Analytics.Infrastructure.Messaging;
 using JiraAi.Analytics.Infrastructure.Persistence;
+using JiraAi.Analytics.Infrastructure.Sprints;
 using JiraAi.Analytics.Worker.Workers;
 using JiraAi.Contracts.Sprints.V1;
 
@@ -58,6 +59,28 @@ builder.Services.AddGrpcClient<AlertService.AlertServiceClient>(options =>
 
 builder.Services.AddSingleton<IAlertClientService, AlertClientService>();
 
+// 6b. MS2 gRPC SprintService client: real sprint dates/status for snapshots (MS3 → MS2 over gRPC)
+builder.Services.Configure<SprintDirectoryOptions>(
+    builder.Configuration.GetSection(SprintDirectoryOptions.SectionName));
+builder.Services.Configure<SprintLifecycleOptions>(
+    builder.Configuration.GetSection(SprintLifecycleOptions.SectionName));
+builder.Services.AddGrpcClient<SprintService.SprintServiceClient>(options =>
+{
+    options.Address = new Uri(alertEndpoint); // same MS2 endpoint as AlertService
+})
+.ConfigureChannel(channelOptions =>
+{
+    channelOptions.HttpHandler = new SocketsHttpHandler
+    {
+        EnableMultipleHttp2Connections = true,
+        KeepAlivePingDelay = TimeSpan.FromSeconds(30),
+        KeepAlivePingTimeout = TimeSpan.FromSeconds(10),
+        PooledConnectionIdleTimeout = TimeSpan.FromMinutes(1)
+    };
+});
+builder.Services.AddSingleton<ISprintDirectory, SprintDirectoryClient>();
+builder.Services.AddSingleton<ISprintSnapshotSynchronizer, SprintSnapshotSynchronizer>();
+
 // 7. Kafka Messaging Processors & Producer
 builder.Services.AddSingleton<IKafkaProducerWrapper, KafkaProducerWrapper>();
 builder.Services.AddSingleton<IIssuesEventProcessor, IssuesEventProcessor>();
@@ -66,6 +89,7 @@ builder.Services.AddSingleton<IAnalyticsQueryProcessor, AnalyticsQueryProcessor>
 // 8. Hosted Background Workers
 builder.Services.AddHostedService<IssuesEventsWorker>();
 builder.Services.AddHostedService<AnalyticsQueryResponderWorker>();
+builder.Services.AddHostedService<SprintLifecycleWorker>();
 
 var app = builder.Build();
 

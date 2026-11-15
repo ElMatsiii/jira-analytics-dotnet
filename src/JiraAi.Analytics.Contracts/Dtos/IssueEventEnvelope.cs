@@ -75,4 +75,8 @@ public class IssueEventPayload
 
     [JsonPropertyName("previousSprintId")]
     public string? PreviousSprintId { get; set; }
+
+    /// <summary>Parent epic of the issue (MS1 sends it only when the issue has one).</summary>
+    [JsonPropertyName("parentId")]
+    public string? ParentId { get; set; }
 }

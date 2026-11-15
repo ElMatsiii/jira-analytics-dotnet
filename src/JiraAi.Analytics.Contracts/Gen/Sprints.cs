@@ -24,67 +24,68 @@ namespace JiraAi.Contracts.Sprints.V1 {
     static SprintsReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg1zcHJpbnRzLnByb3RvEg9qaXJhLnNwcmludHMudjEi/QEKBlNwcmludBIK",
+            "Cg1zcHJpbnRzLnByb3RvEg9qaXJhLnNwcmludHMudjEinAIKBlNwcmludBIK",
             "CgJpZBgBIAEoCRISCgpwcm9qZWN0X2lkGAIgASgJEgwKBG5hbWUYAyABKAkS",
             "DAoEZ29hbBgEIAEoCRISCgpzdGFydF9kYXRlGAUgASgDEhAKCGVuZF9kYXRl",
             "GAYgASgDEi0KBnN0YXR1cxgHIAEoDjIdLmppcmEuc3ByaW50cy52MS5TcHJp",
             "bnRTdGF0dXMSGgoSdG90YWxfc3RvcnlfcG9pbnRzGAggASgFEh4KFmNvbXBs",
             "ZXRlZF9zdG9yeV9wb2ludHMYCSABKAUSEgoKY3JlYXRlZF9hdBgKIAEoAxIS",
-            "Cgp1cGRhdGVkX2F0GAsgASgDImsKE0NyZWF0ZVNwcmludFJlcXVlc3QSEgoK",
-            "cHJvamVjdF9pZBgBIAEoCRIMCgRuYW1lGAIgASgJEgwKBGdvYWwYAyABKAkS",
-            "EgoKc3RhcnRfZGF0ZRgEIAEoAxIQCghlbmRfZGF0ZRgFIAEoAyI/ChRDcmVh",
-            "dGVTcHJpbnRSZXNwb25zZRInCgZzcHJpbnQYASABKAsyFy5qaXJhLnNwcmlu",
-            "dHMudjEuU3ByaW50Ih4KEEdldFNwcmludFJlcXVlc3QSCgoCaWQYASABKAki",
-            "PAoRR2V0U3ByaW50UmVzcG9uc2USJwoGc3ByaW50GAEgASgLMhcuamlyYS5z",
-            "cHJpbnRzLnYxLlNwcmludCJXChJMaXN0U3ByaW50c1JlcXVlc3QSEgoKcHJv",
-            "amVjdF9pZBgBIAEoCRItCgZzdGF0dXMYAiABKA4yHS5qaXJhLnNwcmludHMu",
-            "djEuU3ByaW50U3RhdHVzIj8KE0xpc3RTcHJpbnRzUmVzcG9uc2USKAoHc3By",
-            "aW50cxgBIAMoCzIXLmppcmEuc3ByaW50cy52MS5TcHJpbnQiIAoSU3RhcnRT",
-            "cHJpbnRSZXF1ZXN0EgoKAmlkGAEgASgJIj4KE1N0YXJ0U3ByaW50UmVzcG9u",
-            "c2USJwoGc3ByaW50GAEgASgLMhcuamlyYS5zcHJpbnRzLnYxLlNwcmludCIj",
-            "ChVDb21wbGV0ZVNwcmludFJlcXVlc3QSCgoCaWQYASABKAkiQQoWQ29tcGxl",
-            "dGVTcHJpbnRSZXNwb25zZRInCgZzcHJpbnQYASABKAsyFy5qaXJhLnNwcmlu",
-            "dHMudjEuU3ByaW50IsQBCgtTcHJpbnRBbGVydBIKCgJpZBgBIAEoCRIRCglz",
-            "cHJpbnRfaWQYAiABKAkSKAoEdHlwZRgDIAEoDjIaLmppcmEuc3ByaW50cy52",
-            "MS5BbGVydFR5cGUSMAoIc2V2ZXJpdHkYBCABKA4yHi5qaXJhLnNwcmludHMu",
-            "djEuQWxlcnRTZXZlcml0eRIPCgdtZXNzYWdlGAUgASgJEhYKDnJlY29tbWVu",
-            "ZGF0aW9uGAYgASgJEhEKCXRpbWVzdGFtcBgHIAEoAyKzAQoZVHJpZ2dlclNw",
-            "cmludEFsZXJ0UmVxdWVzdBIRCglzcHJpbnRfaWQYASABKAkSKAoEdHlwZRgC",
-            "IAEoDjIaLmppcmEuc3ByaW50cy52MS5BbGVydFR5cGUSMAoIc2V2ZXJpdHkY",
-            "AyABKA4yHi5qaXJhLnNwcmludHMudjEuQWxlcnRTZXZlcml0eRIPCgdtZXNz",
-            "YWdlGAQgASgJEhYKDnJlY29tbWVuZGF0aW9uGAUgASgJIkQKGlRyaWdnZXJT",
-            "cHJpbnRBbGVydFJlc3BvbnNlEhQKDGFja25vd2xlZGdlZBgBIAEoCBIQCghh",
-            "bGVydF9pZBgCIAEoCSqcAQoMU3ByaW50U3RhdHVzEh0KGVNQUklOVF9TVEFU",
-            "VVNfVU5TUEVDSUZJRUQQABIZChVTUFJJTlRfU1RBVFVTX1BMQU5ORUQQARIY",
-            "ChRTUFJJTlRfU1RBVFVTX0FDVElWRRACEhsKF1NQUklOVF9TVEFUVVNfQ09N",
-            "UExFVEVEEAMSGwoXU1BSSU5UX1NUQVRVU19DQU5DRUxMRUQQBCqIAQoJQWxl",
-            "cnRUeXBlEhoKFkFMRVJUX1RZUEVfVU5TUEVDSUZJRUQQABIaChZBTEVSVF9U",
-            "WVBFX1NDT1BFX0NSRUVQEAESHwobQUxFUlRfVFlQRV9WRUxPQ0lUWV9ERUZJ",
-            "Q0lUEAISIgoeQUxFUlRfVFlQRV9CT1RUTEVORUNLX0RFVEVDVEVEEAMqgQEK",
-            "DUFsZXJ0U2V2ZXJpdHkSHgoaQUxFUlRfU0VWRVJJVFlfVU5TUEVDSUZJRUQQ",
-            "ABIXChNBTEVSVF9TRVZFUklUWV9JTkZPEAESGgoWQUxFUlRfU0VWRVJJVFlf",
-            "V0FSTklORxACEhsKF0FMRVJUX1NFVkVSSVRZX0NSSVRJQ0FMEAMy1wMKDVNw",
-            "cmludFNlcnZpY2USWwoMQ3JlYXRlU3ByaW50EiQuamlyYS5zcHJpbnRzLnYx",
-            "LkNyZWF0ZVNwcmludFJlcXVlc3QaJS5qaXJhLnNwcmludHMudjEuQ3JlYXRl",
-            "U3ByaW50UmVzcG9uc2USUgoJR2V0U3ByaW50EiEuamlyYS5zcHJpbnRzLnYx",
-            "LkdldFNwcmludFJlcXVlc3QaIi5qaXJhLnNwcmludHMudjEuR2V0U3ByaW50",
-            "UmVzcG9uc2USWAoLTGlzdFNwcmludHMSIy5qaXJhLnNwcmludHMudjEuTGlz",
-            "dFNwcmludHNSZXF1ZXN0GiQuamlyYS5zcHJpbnRzLnYxLkxpc3RTcHJpbnRz",
-            "UmVzcG9uc2USWAoLU3RhcnRTcHJpbnQSIy5qaXJhLnNwcmludHMudjEuU3Rh",
-            "cnRTcHJpbnRSZXF1ZXN0GiQuamlyYS5zcHJpbnRzLnYxLlN0YXJ0U3ByaW50",
-            "UmVzcG9uc2USYQoOQ29tcGxldGVTcHJpbnQSJi5qaXJhLnNwcmludHMudjEu",
-            "Q29tcGxldGVTcHJpbnRSZXF1ZXN0GicuamlyYS5zcHJpbnRzLnYxLkNvbXBs",
-            "ZXRlU3ByaW50UmVzcG9uc2UyfQoMQWxlcnRTZXJ2aWNlEm0KElRyaWdnZXJT",
-            "cHJpbnRBbGVydBIqLmppcmEuc3ByaW50cy52MS5UcmlnZ2VyU3ByaW50QWxl",
-            "cnRSZXF1ZXN0GisuamlyYS5zcHJpbnRzLnYxLlRyaWdnZXJTcHJpbnRBbGVy",
-            "dFJlc3BvbnNlQkpaKmppcmEtY29udHJhY3RzL2dlbi9nby9zcHJpbnRzL3Yx",
-            "O3NwcmludHN2MaoCG0ppcmFBaS5Db250cmFjdHMuU3ByaW50cy5WMWIGcHJv",
-            "dG8z"));
+            "Cgp1cGRhdGVkX2F0GAsgASgDEh0KFWNhcGFjaXR5X3N0b3J5X3BvaW50cxgM",
+            "IAEoBSKKAQoTQ3JlYXRlU3ByaW50UmVxdWVzdBISCgpwcm9qZWN0X2lkGAEg",
+            "ASgJEgwKBG5hbWUYAiABKAkSDAoEZ29hbBgDIAEoCRISCgpzdGFydF9kYXRl",
+            "GAQgASgDEhAKCGVuZF9kYXRlGAUgASgDEh0KFWNhcGFjaXR5X3N0b3J5X3Bv",
+            "aW50cxgGIAEoBSI/ChRDcmVhdGVTcHJpbnRSZXNwb25zZRInCgZzcHJpbnQY",
+            "ASABKAsyFy5qaXJhLnNwcmludHMudjEuU3ByaW50Ih4KEEdldFNwcmludFJl",
+            "cXVlc3QSCgoCaWQYASABKAkiPAoRR2V0U3ByaW50UmVzcG9uc2USJwoGc3By",
+            "aW50GAEgASgLMhcuamlyYS5zcHJpbnRzLnYxLlNwcmludCJXChJMaXN0U3By",
+            "aW50c1JlcXVlc3QSEgoKcHJvamVjdF9pZBgBIAEoCRItCgZzdGF0dXMYAiAB",
+            "KA4yHS5qaXJhLnNwcmludHMudjEuU3ByaW50U3RhdHVzIj8KE0xpc3RTcHJp",
+            "bnRzUmVzcG9uc2USKAoHc3ByaW50cxgBIAMoCzIXLmppcmEuc3ByaW50cy52",
+            "MS5TcHJpbnQiIAoSU3RhcnRTcHJpbnRSZXF1ZXN0EgoKAmlkGAEgASgJIj4K",
+            "E1N0YXJ0U3ByaW50UmVzcG9uc2USJwoGc3ByaW50GAEgASgLMhcuamlyYS5z",
+            "cHJpbnRzLnYxLlNwcmludCIjChVDb21wbGV0ZVNwcmludFJlcXVlc3QSCgoC",
+            "aWQYASABKAkiQQoWQ29tcGxldGVTcHJpbnRSZXNwb25zZRInCgZzcHJpbnQY",
+            "ASABKAsyFy5qaXJhLnNwcmludHMudjEuU3ByaW50IsQBCgtTcHJpbnRBbGVy",
+            "dBIKCgJpZBgBIAEoCRIRCglzcHJpbnRfaWQYAiABKAkSKAoEdHlwZRgDIAEo",
+            "DjIaLmppcmEuc3ByaW50cy52MS5BbGVydFR5cGUSMAoIc2V2ZXJpdHkYBCAB",
+            "KA4yHi5qaXJhLnNwcmludHMudjEuQWxlcnRTZXZlcml0eRIPCgdtZXNzYWdl",
+            "GAUgASgJEhYKDnJlY29tbWVuZGF0aW9uGAYgASgJEhEKCXRpbWVzdGFtcBgH",
+            "IAEoAyKzAQoZVHJpZ2dlclNwcmludEFsZXJ0UmVxdWVzdBIRCglzcHJpbnRf",
+            "aWQYASABKAkSKAoEdHlwZRgCIAEoDjIaLmppcmEuc3ByaW50cy52MS5BbGVy",
+            "dFR5cGUSMAoIc2V2ZXJpdHkYAyABKA4yHi5qaXJhLnNwcmludHMudjEuQWxl",
+            "cnRTZXZlcml0eRIPCgdtZXNzYWdlGAQgASgJEhYKDnJlY29tbWVuZGF0aW9u",
+            "GAUgASgJIkQKGlRyaWdnZXJTcHJpbnRBbGVydFJlc3BvbnNlEhQKDGFja25v",
+            "d2xlZGdlZBgBIAEoCBIQCghhbGVydF9pZBgCIAEoCSqcAQoMU3ByaW50U3Rh",
+            "dHVzEh0KGVNQUklOVF9TVEFUVVNfVU5TUEVDSUZJRUQQABIZChVTUFJJTlRf",
+            "U1RBVFVTX1BMQU5ORUQQARIYChRTUFJJTlRfU1RBVFVTX0FDVElWRRACEhsK",
+            "F1NQUklOVF9TVEFUVVNfQ09NUExFVEVEEAMSGwoXU1BSSU5UX1NUQVRVU19D",
+            "QU5DRUxMRUQQBCqIAQoJQWxlcnRUeXBlEhoKFkFMRVJUX1RZUEVfVU5TUEVD",
+            "SUZJRUQQABIaChZBTEVSVF9UWVBFX1NDT1BFX0NSRUVQEAESHwobQUxFUlRf",
+            "VFlQRV9WRUxPQ0lUWV9ERUZJQ0lUEAISIgoeQUxFUlRfVFlQRV9CT1RUTEVO",
+            "RUNLX0RFVEVDVEVEEAMqgQEKDUFsZXJ0U2V2ZXJpdHkSHgoaQUxFUlRfU0VW",
+            "RVJJVFlfVU5TUEVDSUZJRUQQABIXChNBTEVSVF9TRVZFUklUWV9JTkZPEAES",
+            "GgoWQUxFUlRfU0VWRVJJVFlfV0FSTklORxACEhsKF0FMRVJUX1NFVkVSSVRZ",
+            "X0NSSVRJQ0FMEAMy1wMKDVNwcmludFNlcnZpY2USWwoMQ3JlYXRlU3ByaW50",
+            "EiQuamlyYS5zcHJpbnRzLnYxLkNyZWF0ZVNwcmludFJlcXVlc3QaJS5qaXJh",
+            "LnNwcmludHMudjEuQ3JlYXRlU3ByaW50UmVzcG9uc2USUgoJR2V0U3ByaW50",
+            "EiEuamlyYS5zcHJpbnRzLnYxLkdldFNwcmludFJlcXVlc3QaIi5qaXJhLnNw",
+            "cmludHMudjEuR2V0U3ByaW50UmVzcG9uc2USWAoLTGlzdFNwcmludHMSIy5q",
+            "aXJhLnNwcmludHMudjEuTGlzdFNwcmludHNSZXF1ZXN0GiQuamlyYS5zcHJp",
+            "bnRzLnYxLkxpc3RTcHJpbnRzUmVzcG9uc2USWAoLU3RhcnRTcHJpbnQSIy5q",
+            "aXJhLnNwcmludHMudjEuU3RhcnRTcHJpbnRSZXF1ZXN0GiQuamlyYS5zcHJp",
+            "bnRzLnYxLlN0YXJ0U3ByaW50UmVzcG9uc2USYQoOQ29tcGxldGVTcHJpbnQS",
+            "Ji5qaXJhLnNwcmludHMudjEuQ29tcGxldGVTcHJpbnRSZXF1ZXN0Gicuamly",
+            "YS5zcHJpbnRzLnYxLkNvbXBsZXRlU3ByaW50UmVzcG9uc2UyfQoMQWxlcnRT",
+            "ZXJ2aWNlEm0KElRyaWdnZXJTcHJpbnRBbGVydBIqLmppcmEuc3ByaW50cy52",
+            "MS5UcmlnZ2VyU3ByaW50QWxlcnRSZXF1ZXN0GisuamlyYS5zcHJpbnRzLnYx",
+            "LlRyaWdnZXJTcHJpbnRBbGVydFJlc3BvbnNlQkpaKmppcmEtY29udHJhY3Rz",
+            "L2dlbi9nby9zcHJpbnRzL3YxO3NwcmludHN2MaoCG0ppcmFBaS5Db250cmFj",
+            "dHMuU3ByaW50cy5WMWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::JiraAi.Contracts.Sprints.V1.SprintStatus), typeof(global::JiraAi.Contracts.Sprints.V1.AlertType), typeof(global::JiraAi.Contracts.Sprints.V1.AlertSeverity), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::JiraAi.Contracts.Sprints.V1.Sprint), global::JiraAi.Contracts.Sprints.V1.Sprint.Parser, new[]{ "Id", "ProjectId", "Name", "Goal", "StartDate", "EndDate", "Status", "TotalStoryPoints", "CompletedStoryPoints", "CreatedAt", "UpdatedAt" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::JiraAi.Contracts.Sprints.V1.CreateSprintRequest), global::JiraAi.Contracts.Sprints.V1.CreateSprintRequest.Parser, new[]{ "ProjectId", "Name", "Goal", "StartDate", "EndDate" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::JiraAi.Contracts.Sprints.V1.Sprint), global::JiraAi.Contracts.Sprints.V1.Sprint.Parser, new[]{ "Id", "ProjectId", "Name", "Goal", "StartDate", "EndDate", "Status", "TotalStoryPoints", "CompletedStoryPoints", "CreatedAt", "UpdatedAt", "CapacityStoryPoints" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::JiraAi.Contracts.Sprints.V1.CreateSprintRequest), global::JiraAi.Contracts.Sprints.V1.CreateSprintRequest.Parser, new[]{ "ProjectId", "Name", "Goal", "StartDate", "EndDate", "CapacityStoryPoints" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::JiraAi.Contracts.Sprints.V1.CreateSprintResponse), global::JiraAi.Contracts.Sprints.V1.CreateSprintResponse.Parser, new[]{ "Sprint" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::JiraAi.Contracts.Sprints.V1.GetSprintRequest), global::JiraAi.Contracts.Sprints.V1.GetSprintRequest.Parser, new[]{ "Id" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::JiraAi.Contracts.Sprints.V1.GetSprintResponse), global::JiraAi.Contracts.Sprints.V1.GetSprintResponse.Parser, new[]{ "Sprint" }, null, null, null, null),
@@ -174,6 +175,7 @@ namespace JiraAi.Contracts.Sprints.V1 {
       completedStoryPoints_ = other.completedStoryPoints_;
       createdAt_ = other.createdAt_;
       updatedAt_ = other.updatedAt_;
+      capacityStoryPoints_ = other.capacityStoryPoints_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -315,6 +317,21 @@ namespace JiraAi.Contracts.Sprints.V1 {
       }
     }
 
+    /// <summary>Field number for the "capacity_story_points" field.</summary>
+    public const int CapacityStoryPointsFieldNumber = 12;
+    private int capacityStoryPoints_;
+    /// <summary>
+    /// Planned capacity in story points; 0 means not defined.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CapacityStoryPoints {
+      get { return capacityStoryPoints_; }
+      set {
+        capacityStoryPoints_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -341,6 +358,7 @@ namespace JiraAi.Contracts.Sprints.V1 {
       if (CompletedStoryPoints != other.CompletedStoryPoints) return false;
       if (CreatedAt != other.CreatedAt) return false;
       if (UpdatedAt != other.UpdatedAt) return false;
+      if (CapacityStoryPoints != other.CapacityStoryPoints) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -359,6 +377,7 @@ namespace JiraAi.Contracts.Sprints.V1 {
       if (CompletedStoryPoints != 0) hash ^= CompletedStoryPoints.GetHashCode();
       if (CreatedAt != 0L) hash ^= CreatedAt.GetHashCode();
       if (UpdatedAt != 0L) hash ^= UpdatedAt.GetHashCode();
+      if (CapacityStoryPoints != 0) hash ^= CapacityStoryPoints.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -421,6 +440,10 @@ namespace JiraAi.Contracts.Sprints.V1 {
         output.WriteRawTag(88);
         output.WriteInt64(UpdatedAt);
       }
+      if (CapacityStoryPoints != 0) {
+        output.WriteRawTag(96);
+        output.WriteInt32(CapacityStoryPoints);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -475,6 +498,10 @@ namespace JiraAi.Contracts.Sprints.V1 {
         output.WriteRawTag(88);
         output.WriteInt64(UpdatedAt);
       }
+      if (CapacityStoryPoints != 0) {
+        output.WriteRawTag(96);
+        output.WriteInt32(CapacityStoryPoints);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -517,6 +544,9 @@ namespace JiraAi.Contracts.Sprints.V1 {
       }
       if (UpdatedAt != 0L) {
         size += 1 + pb::CodedOutputStream.ComputeInt64Size(UpdatedAt);
+      }
+      if (CapacityStoryPoints != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(CapacityStoryPoints);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -562,6 +592,9 @@ namespace JiraAi.Contracts.Sprints.V1 {
       }
       if (other.UpdatedAt != 0L) {
         UpdatedAt = other.UpdatedAt;
+      }
+      if (other.CapacityStoryPoints != 0) {
+        CapacityStoryPoints = other.CapacityStoryPoints;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -624,6 +657,10 @@ namespace JiraAi.Contracts.Sprints.V1 {
           }
           case 88: {
             UpdatedAt = input.ReadInt64();
+            break;
+          }
+          case 96: {
+            CapacityStoryPoints = input.ReadInt32();
             break;
           }
         }
@@ -689,6 +726,10 @@ namespace JiraAi.Contracts.Sprints.V1 {
             UpdatedAt = input.ReadInt64();
             break;
           }
+          case 96: {
+            CapacityStoryPoints = input.ReadInt32();
+            break;
+          }
         }
       }
     }
@@ -736,6 +777,7 @@ namespace JiraAi.Contracts.Sprints.V1 {
       goal_ = other.goal_;
       startDate_ = other.startDate_;
       endDate_ = other.endDate_;
+      capacityStoryPoints_ = other.capacityStoryPoints_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -805,6 +847,21 @@ namespace JiraAi.Contracts.Sprints.V1 {
       }
     }
 
+    /// <summary>Field number for the "capacity_story_points" field.</summary>
+    public const int CapacityStoryPointsFieldNumber = 6;
+    private int capacityStoryPoints_;
+    /// <summary>
+    /// Optional planned capacity in story points; 0 means not defined.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CapacityStoryPoints {
+      get { return capacityStoryPoints_; }
+      set {
+        capacityStoryPoints_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -825,6 +882,7 @@ namespace JiraAi.Contracts.Sprints.V1 {
       if (Goal != other.Goal) return false;
       if (StartDate != other.StartDate) return false;
       if (EndDate != other.EndDate) return false;
+      if (CapacityStoryPoints != other.CapacityStoryPoints) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -837,6 +895,7 @@ namespace JiraAi.Contracts.Sprints.V1 {
       if (Goal.Length != 0) hash ^= Goal.GetHashCode();
       if (StartDate != 0L) hash ^= StartDate.GetHashCode();
       if (EndDate != 0L) hash ^= EndDate.GetHashCode();
+      if (CapacityStoryPoints != 0) hash ^= CapacityStoryPoints.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -875,6 +934,10 @@ namespace JiraAi.Contracts.Sprints.V1 {
         output.WriteRawTag(40);
         output.WriteInt64(EndDate);
       }
+      if (CapacityStoryPoints != 0) {
+        output.WriteRawTag(48);
+        output.WriteInt32(CapacityStoryPoints);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -905,6 +968,10 @@ namespace JiraAi.Contracts.Sprints.V1 {
         output.WriteRawTag(40);
         output.WriteInt64(EndDate);
       }
+      if (CapacityStoryPoints != 0) {
+        output.WriteRawTag(48);
+        output.WriteInt32(CapacityStoryPoints);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -929,6 +996,9 @@ namespace JiraAi.Contracts.Sprints.V1 {
       }
       if (EndDate != 0L) {
         size += 1 + pb::CodedOutputStream.ComputeInt64Size(EndDate);
+      }
+      if (CapacityStoryPoints != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(CapacityStoryPoints);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -956,6 +1026,9 @@ namespace JiraAi.Contracts.Sprints.V1 {
       }
       if (other.EndDate != 0L) {
         EndDate = other.EndDate;
+      }
+      if (other.CapacityStoryPoints != 0) {
+        CapacityStoryPoints = other.CapacityStoryPoints;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -996,6 +1069,10 @@ namespace JiraAi.Contracts.Sprints.V1 {
             EndDate = input.ReadInt64();
             break;
           }
+          case 48: {
+            CapacityStoryPoints = input.ReadInt32();
+            break;
+          }
         }
       }
     #endif
@@ -1033,6 +1110,10 @@ namespace JiraAi.Contracts.Sprints.V1 {
           }
           case 40: {
             EndDate = input.ReadInt64();
+            break;
+          }
+          case 48: {
+            CapacityStoryPoints = input.ReadInt32();
             break;
           }
         }

@@ -1,20 +1,19 @@
 namespace JiraAi.Analytics.Domain.Services;
 
-using JiraAi.Analytics.Contracts.Dtos;
 using JiraAi.Analytics.Domain.Models;
 
 public interface IBurndownCalculator
 {
-    List<BurndownPointDto> CalculateBurndownSeries(SprintSnapshotDocument snapshot, DateTime? asOfDate = null);
+    List<BurndownPoint> CalculateBurndownSeries(SprintSnapshotDocument snapshot, DateTime? asOfDate = null);
 }
 
 public class BurndownCalculator : IBurndownCalculator
 {
-    public List<BurndownPointDto> CalculateBurndownSeries(SprintSnapshotDocument snapshot, DateTime? asOfDate = null)
+    public List<BurndownPoint> CalculateBurndownSeries(SprintSnapshotDocument snapshot, DateTime? asOfDate = null)
     {
         ArgumentNullException.ThrowIfNull(snapshot);
 
-        var points = new List<BurndownPointDto>();
+        var points = new List<BurndownPoint>();
         var startDate = snapshot.StartDate.Date;
         var endDate = snapshot.EndDate.Date;
 
@@ -28,6 +27,14 @@ public class BurndownCalculator : IBurndownCalculator
             .GroupBy(d => d.Date)
             .ToDictionary(g => g.Key, g => g.Last());
 
+        // Value shown for days before the first recorded day: the earliest record if any (scope known
+        // at that point), otherwise the current remaining points.
+        var earliestRecord = snapshot.DailyBurndown
+            .Where(d => !string.IsNullOrEmpty(d.Date))
+            .OrderBy(d => d.Date, StringComparer.Ordinal)
+            .FirstOrDefault();
+        double? lastKnown = null;
+
         for (int dayIndex = 0; dayIndex <= totalDays; dayIndex++)
         {
             var dayDate = startDate.AddDays(dayIndex);
@@ -36,10 +43,15 @@ public class BurndownCalculator : IBurndownCalculator
             // T1-F19-01: Ideal burndown line
             var idealRemaining = Math.Max(0.0, Math.Round(totalPoints - (dayIndex * idealDecrement), 2));
 
-            double actualRemaining;
+            double? actualRemaining;
             double? completedOnDay = null;
 
-            if (recordedByDate.TryGetValue(dateStr, out var recorded))
+            if (dayDate > currentDay)
+            {
+                // A day that has not happened yet has no actual value: it is not drawn.
+                actualRemaining = null;
+            }
+            else if (recordedByDate.TryGetValue(dateStr, out var recorded))
             {
                 // T2-F19-03: Negative completed points clamped to zero
                 actualRemaining = Math.Max(0.0, recorded.ActualRemaining);
@@ -47,24 +59,17 @@ public class BurndownCalculator : IBurndownCalculator
             }
             else
             {
-                if (dayDate <= currentDay)
-                {
-                    actualRemaining = Math.Max(0.0, snapshot.RemainingStoryPoints);
-                }
-                else
-                {
-                    actualRemaining = Math.Max(0.0, snapshot.RemainingStoryPoints);
-                }
+                // A past day without events keeps the last known value (nothing changed that day).
+                actualRemaining = lastKnown
+                    ?? Math.Max(0.0, earliestRecord?.ActualRemaining ?? snapshot.RemainingStoryPoints);
             }
 
-            points.Add(new BurndownPointDto
+            if (actualRemaining.HasValue)
             {
-                Date = dateStr,
-                DayIndex = dayIndex,
-                IdealRemaining = idealRemaining,
-                ActualRemaining = actualRemaining,
-                CompletedOnDay = completedOnDay
-            });
+                lastKnown = actualRemaining;
+            }
+
+            points.Add(new BurndownPoint(dateStr, dayIndex, idealRemaining, actualRemaining, completedOnDay));
         }
 
         return points;

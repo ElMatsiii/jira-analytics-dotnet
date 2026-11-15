@@ -87,16 +87,17 @@ public class MongoSnapshotRepository : ISnapshotRepository
         }
     }
 
-    public async Task<List<SprintSnapshotDocument>> GetActiveSnapshotsAsync(CancellationToken cancellationToken = default)
+    public async Task<List<SprintSnapshotDocument>> GetOpenSnapshotsAsync(CancellationToken cancellationToken = default)
     {
         try
         {
-            var filter = Builders<SprintSnapshotDocument>.Filter.Eq(x => x.Status, "ACTIVE");
+            var filter = Builders<SprintSnapshotDocument>.Filter.Nin(
+                x => x.Status, new[] { SnapshotStatus.Completed, SnapshotStatus.Cancelled });
             return await _context.Snapshots.Find(filter).ToListAsync(cancellationToken);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to retrieve active sprint snapshots");
+            _logger.LogError(ex, "Failed to retrieve open sprint snapshots");
             throw;
         }
     }

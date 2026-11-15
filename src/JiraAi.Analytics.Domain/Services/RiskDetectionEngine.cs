@@ -2,7 +2,6 @@ namespace JiraAi.Analytics.Domain.Services;
 
 using System.Globalization;
 using JiraAi.Analytics.Domain.Models;
-using JiraAi.Contracts.Sprints.V1;
 
 public interface IRiskDetectionEngine
 {
@@ -27,8 +26,8 @@ public class RiskDetectionEngine : IRiskDetectionEngine
 
             risks.Add(new RiskAssessment
             {
-                Type = AlertType.ScopeCreep,
-                Severity = increasePct >= 50.0 ? AlertSeverity.Critical : AlertSeverity.Warning,
+                Type = RiskType.ScopeCreep,
+                Severity = increasePct >= 50.0 ? RiskSeverity.Critical : RiskSeverity.Warning,
                 Title = "Scope Creep Detected",
                 Message = $"Scope creep of {formattedIncreasePct}% detected (threshold: 20%). Current total: {snapshot.TotalStoryPoints} pts vs initial: {snapshot.InitialCommittedPoints} pts.",
                 Recommendation = "Review newly added scope and consider moving low-priority stories to backlog.",
@@ -52,8 +51,8 @@ public class RiskDetectionEngine : IRiskDetectionEngine
 
                 risks.Add(new RiskAssessment
                 {
-                    Type = AlertType.VelocityDeficit,
-                    Severity = AlertSeverity.Warning,
+                    Type = RiskType.VelocityDeficit,
+                    Severity = RiskSeverity.Warning,
                     Title = "Velocity Deficit Detected",
                     Message = $"Velocity deficit detected: {snapshot.RemainingStoryPoints} pts remaining vs {idealRemaining:F1} ideal remaining at {timeElapsedRatio * 100:F0}% sprint duration.",
                     Recommendation = "Re-estimate remaining tasks and discuss scope reduction during standup.",
@@ -74,8 +73,8 @@ public class RiskDetectionEngine : IRiskDetectionEngine
             {
                 risks.Add(new RiskAssessment
                 {
-                    Type = AlertType.BottleneckDetected,
-                    Severity = AlertSeverity.Info,
+                    Type = RiskType.BottleneckDetected,
+                    Severity = RiskSeverity.Info,
                     Title = "Bottleneck Detected",
                     Message = $"Bottleneck detected: {wipPoints} of {snapshot.RemainingStoryPoints} remaining pts ({wipRatio * 100:F0}%) are in progress or review.",
                     Recommendation = "Swarm on in-review and in-progress items to restore continuous flow.",

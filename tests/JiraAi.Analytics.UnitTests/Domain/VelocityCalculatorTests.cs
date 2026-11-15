@@ -45,17 +45,16 @@ public class VelocityCalculatorTests
     }
 
     [Fact]
-    public void CalculateRollingVelocity_EmptyHistory_ReturnsCurrentCompletedPoints()
+    public void CalculateRollingVelocity_EmptyHistory_IsZero_NotTheSprintInProgress()
     {
-        var velocity = _sut.CalculateRollingVelocity(new List<VelocityRecordDocument>(), currentCompletedPoints: 18);
-        velocity.Should().Be(18.0);
+        // No closed sprint yet: the average is 0 (the running sprint's 18 SP are not a velocity).
+        _sut.CalculateRollingVelocity(new List<VelocityRecordDocument>()).Should().Be(0.0);
     }
 
     [Fact]
-    public void CalculateRollingVelocity_NullHistory_ReturnsCurrentCompletedPoints()
+    public void CalculateRollingVelocity_NullHistory_IsZero()
     {
-        var velocity = _sut.CalculateRollingVelocity(null, currentCompletedPoints: 12);
-        velocity.Should().Be(12.0);
+        _sut.CalculateRollingVelocity(null).Should().Be(0.0);
     }
 
     [Fact]

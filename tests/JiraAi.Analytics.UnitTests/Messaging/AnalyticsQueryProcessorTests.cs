@@ -11,6 +11,7 @@ using JiraAi.Analytics.Infrastructure.Persistence;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using NSubstitute;
+using JiraAi.Analytics.UnitTests.TestDoubles;
 using Xunit;
 
 public class AnalyticsQueryProcessorTests
@@ -40,7 +41,8 @@ public class AnalyticsQueryProcessorTests
             _riskEngine,
             _producer,
             kafkaOptions,
-            NullLogger<AnalyticsQueryProcessor>.Instance);
+            NullLogger<AnalyticsQueryProcessor>.Instance,
+            TestSprintSync.Create(_snapshotRepo, _velocityRepo));
     }
 
     [Fact]

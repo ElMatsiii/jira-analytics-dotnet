@@ -6,7 +6,7 @@ using JiraAi.Analytics.Domain.Models;
 using JiraAi.Analytics.Domain.Repositories;
 using JiraAi.Analytics.Domain.Services;
 using JiraAi.Analytics.Infrastructure.Grpc;
-using JiraAi.Contracts.Sprints.V1;
+using JiraAi.Analytics.Infrastructure.Sprints;
 using Microsoft.Extensions.Logging;
 
 public interface IIssuesEventProcessor
@@ -20,6 +20,7 @@ public class IssuesEventProcessor : IIssuesEventProcessor
     private readonly ISnapshotRepository _snapshotRepository;
     private readonly IRiskDetectionEngine _riskEngine;
     private readonly IAlertClientService _alertClient;
+    private readonly ISprintSnapshotSynchronizer _sprintSync;
     private readonly ILogger<IssuesEventProcessor> _logger;
     private readonly HashSet<string> _processedEventIds = new();
     private readonly object _lock = new();
@@ -28,11 +29,13 @@ public class IssuesEventProcessor : IIssuesEventProcessor
         ISnapshotRepository snapshotRepository,
         IRiskDetectionEngine riskEngine,
         IAlertClientService alertClient,
+        ISprintSnapshotSynchronizer sprintSync,
         ILogger<IssuesEventProcessor> logger)
     {
         _snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         _riskEngine = riskEngine ?? throw new ArgumentNullException(nameof(riskEngine));
         _alertClient = alertClient ?? throw new ArgumentNullException(nameof(alertClient));
+        _sprintSync = sprintSync ?? throw new ArgumentNullException(nameof(sprintSync));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -102,23 +105,17 @@ public class IssuesEventProcessor : IIssuesEventProcessor
             return true;
         }
 
-        // 1. Fetch or initialize snapshot
+        // 1. Fetch or initialize snapshot, with the sprint's real dates/name/status from MS2 (gRPC)
         var snapshot = await _snapshotRepository.GetBySprintIdAsync(payload.SprintId, cancellationToken);
         if (snapshot == null)
         {
-            snapshot = new SprintSnapshotDocument
-            {
-                SprintId = payload.SprintId,
-                ProjectId = payload.ProjectId,
-                SprintName = $"Sprint {payload.SprintId}",
-                StartDate = DateTime.UtcNow,
-                EndDate = DateTime.UtcNow.AddDays(14),
-                Status = "ACTIVE",
-                InitialCommittedPoints = Math.Max(0, payload.StoryPoints),
-                TotalStoryPoints = 0,
-                CompletedStoryPoints = 0,
-                RemainingStoryPoints = 0
-            };
+            // The commitment comes from MS2 when the sprint starts (SprintSnapshotRules.ApplyCommitment),
+            // not from the first issue that happens to arrive.
+            snapshot = await _sprintSync.CreateSnapshotAsync(payload.SprintId, payload.ProjectId, cancellationToken);
+        }
+        else
+        {
+            await _sprintSync.SynchronizeAsync(snapshot, cancellationToken);
         }
 
         // 2. Process event type mutation
@@ -162,7 +159,8 @@ public class IssuesEventProcessor : IIssuesEventProcessor
             {
                 Date = todayStr,
                 DayIndex = dayIndex,
-                IdealRemaining = Math.Max(0.0, snapshot.TotalStoryPoints - (dayIndex * (snapshot.TotalStoryPoints / 14.0))),
+                IdealRemaining = Math.Max(0.0, snapshot.TotalStoryPoints
+                    - (dayIndex * ((double)snapshot.TotalStoryPoints / SprintSnapshotRules.DurationDays(snapshot)))),
                 ActualRemaining = snapshot.RemainingStoryPoints,
                 CompletedOnDay = snapshot.CompletedStoryPoints
             });
@@ -208,11 +206,6 @@ public class IssuesEventProcessor : IIssuesEventProcessor
         else
         {
             snapshot.RemainingStoryPoints += points;
-        }
-
-        if (snapshot.InitialCommittedPoints == 0)
-        {
-            snapshot.InitialCommittedPoints = snapshot.TotalStoryPoints;
         }
     }
 

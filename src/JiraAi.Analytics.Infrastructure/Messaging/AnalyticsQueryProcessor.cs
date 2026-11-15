@@ -6,6 +6,7 @@ using JiraAi.Analytics.Contracts.Dtos;
 using JiraAi.Analytics.Domain.Models;
 using JiraAi.Analytics.Domain.Repositories;
 using JiraAi.Analytics.Domain.Services;
+using JiraAi.Analytics.Infrastructure.Sprints;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -33,6 +34,7 @@ public class AnalyticsQueryProcessor : IAnalyticsQueryProcessor
     private readonly IKafkaProducerWrapper _producer;
     private readonly KafkaOptions _kafkaOptions;
     private readonly ILogger<AnalyticsQueryProcessor> _logger;
+    private readonly ISprintSnapshotSynchronizer _sprintSync;
 
     private static readonly HashSet<string> ValidQueryTypes = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -54,8 +56,10 @@ public class AnalyticsQueryProcessor : IAnalyticsQueryProcessor
         IRiskDetectionEngine riskEngine,
         IKafkaProducerWrapper producer,
         IOptions<KafkaOptions> kafkaOptions,
-        ILogger<AnalyticsQueryProcessor> logger)
+        ILogger<AnalyticsQueryProcessor> logger,
+        ISprintSnapshotSynchronizer sprintSync)
     {
+        _sprintSync = sprintSync ?? throw new ArgumentNullException(nameof(sprintSync));
         _snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
         _velocityRepository = velocityRepository ?? throw new ArgumentNullException(nameof(velocityRepository));
         _burndownCalculator = burndownCalculator ?? throw new ArgumentNullException(nameof(burndownCalculator));
@@ -157,28 +161,24 @@ public class AnalyticsQueryProcessor : IAnalyticsQueryProcessor
         bool isInitializing = false;
         if (snapshot == null)
         {
+            // Not persisted: only events create stored snapshots. Dates come from MS2 when available.
             isInitializing = true;
-            snapshot = new SprintSnapshotDocument
-            {
-                SprintId = query.SprintId,
-                ProjectId = query.ProjectId ?? string.Empty,
-                SprintName = $"Sprint {query.SprintId}",
-                StartDate = DateTime.UtcNow,
-                EndDate = DateTime.UtcNow.AddDays(14),
-                Status = "ACTIVE",
-                InitialCommittedPoints = 0,
-                TotalStoryPoints = 0,
-                CompletedStoryPoints = 0,
-                RemainingStoryPoints = 0
-            };
+            snapshot = await _sprintSync.CreateSnapshotAsync(query.SprintId, query.ProjectId ?? string.Empty, cancellationToken);
+        }
+        else if (await _sprintSync.SynchronizeAsync(snapshot, cancellationToken))
+        {
+            // Real dates/status from MS2 (and closure + velocity when the sprint was completed).
+            await _snapshotRepository.UpsertSnapshotAsync(snapshot, cancellationToken);
         }
 
         var burndownData = _burndownCalculator.CalculateBurndownSeries(snapshot);
         var velocityHistory = await _velocityRepository.GetRecentCompletedSprintsAsync(
             snapshot.ProjectId, 3, cancellationToken);
 
-        var velocity = _velocityCalculator.CalculateRollingVelocity(velocityHistory, snapshot.CompletedStoryPoints);
+        var velocity = _velocityCalculator.CalculateRollingVelocity(velocityHistory);
+        var velocitySampleSize = VelocityCalculator.RollingSampleSize(velocityHistory);
         var healthScore = _healthScoreCalculator.CalculateHealthScore(snapshot);
+        var healthStatus = SprintHealthRules.Classify(snapshot, healthScore);
         var (diagnostics, recommendations) = _riskEngine.GenerateDiagnosticsAndRecommendations(snapshot);
 
         if (isInitializing)
@@ -206,11 +206,27 @@ public class AnalyticsQueryProcessor : IAnalyticsQueryProcessor
             CompletedPoints = snapshot.CompletedStoryPoints,
             RemainingPoints = snapshot.RemainingStoryPoints,
             Velocity = velocity,
+            VelocitySampleSize = velocitySampleSize,
             HealthScore = healthScore,
-            BurndownData = burndownData,
+            HealthStatus = SprintHealthRules.ToWireValue(healthStatus),
+            BurndownData = ToDtos(burndownData),
             Diagnostics = diagnostics,
             Recommendations = recommendations,
             Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")
         };
     }
+
+    /// <summary>MS3's burndown series → analytics.reply wire DTOs (Kafka edge).</summary>
+    /// <remarks>Days that have not happened yet keep actualRemaining = null, so the real line ends today.</remarks>
+    public static List<BurndownPointDto> ToDtos(IReadOnlyList<BurndownPoint> points) =>
+        points.Select(ToDto).ToList();
+
+    public static BurndownPointDto ToDto(BurndownPoint point) => new()
+    {
+        Date = point.Date,
+        DayIndex = point.DayIndex,
+        IdealRemaining = point.IdealRemaining,
+        ActualRemaining = point.ActualRemaining,
+        CompletedOnDay = point.CompletedOnDay
+    };
 }
