@@ -36,9 +36,10 @@ public class HealthScoreCalculator : IHealthScoreCalculator
         var completedPoints = Math.Max(0, snapshot.CompletedStoryPoints);
         var completionRatio = Math.Clamp((double)completedPoints / totalPoints, 0.0, 1.0);
 
-        // Baseline score starts at 100, penalized by discrepancy between time elapsed and completion
-        double paceGap = Math.Abs(timeElapsedRatio - completionRatio);
-        double score = 100.0 - (paceGap * 50.0);
+        // Baseline score starts at 100, penalized only when completion lags behind the time elapsed.
+        // Being ahead of the ideal line (more done than time spent) is not a risk, so it costs nothing.
+        double behindGap = Math.Max(0.0, timeElapsedRatio - completionRatio);
+        double score = 100.0 - (behindGap * 50.0);
 
         // Penalty for scope creep (> 20% increase over initial commitment)
         if (snapshot.InitialCommittedPoints > 0 && snapshot.TotalStoryPoints > snapshot.InitialCommittedPoints * 1.20)
