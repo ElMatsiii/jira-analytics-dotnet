@@ -703,6 +703,18 @@ namespace JiraAi.Contracts.Issues.V1 {
     static readonly grpc::Marshaller<global::JiraAi.Contracts.Issues.V1.CheckProjectAccessRequest> __Marshaller_jira_issues_v1_CheckProjectAccessRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::JiraAi.Contracts.Issues.V1.CheckProjectAccessRequest.Parser));
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
     static readonly grpc::Marshaller<global::JiraAi.Contracts.Issues.V1.CheckProjectAccessResponse> __Marshaller_jira_issues_v1_CheckProjectAccessResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::JiraAi.Contracts.Issues.V1.CheckProjectAccessResponse.Parser));
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Marshaller<global::JiraAi.Contracts.Issues.V1.AddProjectMemberRequest> __Marshaller_jira_issues_v1_AddProjectMemberRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::JiraAi.Contracts.Issues.V1.AddProjectMemberRequest.Parser));
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Marshaller<global::JiraAi.Contracts.Issues.V1.AddProjectMemberResponse> __Marshaller_jira_issues_v1_AddProjectMemberResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::JiraAi.Contracts.Issues.V1.AddProjectMemberResponse.Parser));
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Marshaller<global::JiraAi.Contracts.Issues.V1.ListProjectMembersRequest> __Marshaller_jira_issues_v1_ListProjectMembersRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::JiraAi.Contracts.Issues.V1.ListProjectMembersRequest.Parser));
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Marshaller<global::JiraAi.Contracts.Issues.V1.ListProjectMembersResponse> __Marshaller_jira_issues_v1_ListProjectMembersResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::JiraAi.Contracts.Issues.V1.ListProjectMembersResponse.Parser));
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Marshaller<global::JiraAi.Contracts.Issues.V1.RemoveProjectMemberRequest> __Marshaller_jira_issues_v1_RemoveProjectMemberRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::JiraAi.Contracts.Issues.V1.RemoveProjectMemberRequest.Parser));
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Marshaller<global::JiraAi.Contracts.Issues.V1.RemoveProjectMemberResponse> __Marshaller_jira_issues_v1_RemoveProjectMemberResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::JiraAi.Contracts.Issues.V1.RemoveProjectMemberResponse.Parser));
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
     static readonly grpc::Method<global::JiraAi.Contracts.Issues.V1.CreateProjectRequest, global::JiraAi.Contracts.Issues.V1.CreateProjectResponse> __Method_CreateProject = new grpc::Method<global::JiraAi.Contracts.Issues.V1.CreateProjectRequest, global::JiraAi.Contracts.Issues.V1.CreateProjectResponse>(
@@ -728,6 +740,30 @@ namespace JiraAi.Contracts.Issues.V1 {
         __Marshaller_jira_issues_v1_CheckProjectAccessRequest,
         __Marshaller_jira_issues_v1_CheckProjectAccessResponse);
 
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Method<global::JiraAi.Contracts.Issues.V1.AddProjectMemberRequest, global::JiraAi.Contracts.Issues.V1.AddProjectMemberResponse> __Method_AddProjectMember = new grpc::Method<global::JiraAi.Contracts.Issues.V1.AddProjectMemberRequest, global::JiraAi.Contracts.Issues.V1.AddProjectMemberResponse>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "AddProjectMember",
+        __Marshaller_jira_issues_v1_AddProjectMemberRequest,
+        __Marshaller_jira_issues_v1_AddProjectMemberResponse);
+
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Method<global::JiraAi.Contracts.Issues.V1.ListProjectMembersRequest, global::JiraAi.Contracts.Issues.V1.ListProjectMembersResponse> __Method_ListProjectMembers = new grpc::Method<global::JiraAi.Contracts.Issues.V1.ListProjectMembersRequest, global::JiraAi.Contracts.Issues.V1.ListProjectMembersResponse>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "ListProjectMembers",
+        __Marshaller_jira_issues_v1_ListProjectMembersRequest,
+        __Marshaller_jira_issues_v1_ListProjectMembersResponse);
+
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Method<global::JiraAi.Contracts.Issues.V1.RemoveProjectMemberRequest, global::JiraAi.Contracts.Issues.V1.RemoveProjectMemberResponse> __Method_RemoveProjectMember = new grpc::Method<global::JiraAi.Contracts.Issues.V1.RemoveProjectMemberRequest, global::JiraAi.Contracts.Issues.V1.RemoveProjectMemberResponse>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "RemoveProjectMember",
+        __Marshaller_jira_issues_v1_RemoveProjectMemberRequest,
+        __Marshaller_jira_issues_v1_RemoveProjectMemberResponse);
+
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
     {
@@ -752,6 +788,24 @@ namespace JiraAi.Contracts.Issues.V1 {
 
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
       public virtual global::System.Threading.Tasks.Task<global::JiraAi.Contracts.Issues.V1.CheckProjectAccessResponse> CheckProjectAccess(global::JiraAi.Contracts.Issues.V1.CheckProjectAccessRequest request, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual global::System.Threading.Tasks.Task<global::JiraAi.Contracts.Issues.V1.AddProjectMemberResponse> AddProjectMember(global::JiraAi.Contracts.Issues.V1.AddProjectMemberRequest request, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual global::System.Threading.Tasks.Task<global::JiraAi.Contracts.Issues.V1.ListProjectMembersResponse> ListProjectMembers(global::JiraAi.Contracts.Issues.V1.ListProjectMembersRequest request, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual global::System.Threading.Tasks.Task<global::JiraAi.Contracts.Issues.V1.RemoveProjectMemberResponse> RemoveProjectMember(global::JiraAi.Contracts.Issues.V1.RemoveProjectMemberRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -845,6 +899,66 @@ namespace JiraAi.Contracts.Issues.V1 {
       {
         return CallInvoker.AsyncUnaryCall(__Method_CheckProjectAccess, null, options, request);
       }
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual global::JiraAi.Contracts.Issues.V1.AddProjectMemberResponse AddProjectMember(global::JiraAi.Contracts.Issues.V1.AddProjectMemberRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return AddProjectMember(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual global::JiraAi.Contracts.Issues.V1.AddProjectMemberResponse AddProjectMember(global::JiraAi.Contracts.Issues.V1.AddProjectMemberRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_AddProjectMember, null, options, request);
+      }
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual grpc::AsyncUnaryCall<global::JiraAi.Contracts.Issues.V1.AddProjectMemberResponse> AddProjectMemberAsync(global::JiraAi.Contracts.Issues.V1.AddProjectMemberRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return AddProjectMemberAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual grpc::AsyncUnaryCall<global::JiraAi.Contracts.Issues.V1.AddProjectMemberResponse> AddProjectMemberAsync(global::JiraAi.Contracts.Issues.V1.AddProjectMemberRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_AddProjectMember, null, options, request);
+      }
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual global::JiraAi.Contracts.Issues.V1.ListProjectMembersResponse ListProjectMembers(global::JiraAi.Contracts.Issues.V1.ListProjectMembersRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return ListProjectMembers(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual global::JiraAi.Contracts.Issues.V1.ListProjectMembersResponse ListProjectMembers(global::JiraAi.Contracts.Issues.V1.ListProjectMembersRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_ListProjectMembers, null, options, request);
+      }
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual grpc::AsyncUnaryCall<global::JiraAi.Contracts.Issues.V1.ListProjectMembersResponse> ListProjectMembersAsync(global::JiraAi.Contracts.Issues.V1.ListProjectMembersRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return ListProjectMembersAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual grpc::AsyncUnaryCall<global::JiraAi.Contracts.Issues.V1.ListProjectMembersResponse> ListProjectMembersAsync(global::JiraAi.Contracts.Issues.V1.ListProjectMembersRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_ListProjectMembers, null, options, request);
+      }
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual global::JiraAi.Contracts.Issues.V1.RemoveProjectMemberResponse RemoveProjectMember(global::JiraAi.Contracts.Issues.V1.RemoveProjectMemberRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return RemoveProjectMember(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual global::JiraAi.Contracts.Issues.V1.RemoveProjectMemberResponse RemoveProjectMember(global::JiraAi.Contracts.Issues.V1.RemoveProjectMemberRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_RemoveProjectMember, null, options, request);
+      }
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual grpc::AsyncUnaryCall<global::JiraAi.Contracts.Issues.V1.RemoveProjectMemberResponse> RemoveProjectMemberAsync(global::JiraAi.Contracts.Issues.V1.RemoveProjectMemberRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return RemoveProjectMemberAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual grpc::AsyncUnaryCall<global::JiraAi.Contracts.Issues.V1.RemoveProjectMemberResponse> RemoveProjectMemberAsync(global::JiraAi.Contracts.Issues.V1.RemoveProjectMemberRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_RemoveProjectMember, null, options, request);
+      }
       /// <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
       protected override ProjectServiceClient NewInstance(ClientBaseConfiguration configuration)
@@ -861,7 +975,10 @@ namespace JiraAi.Contracts.Issues.V1 {
       return grpc::ServerServiceDefinition.CreateBuilder()
           .AddMethod(__Method_CreateProject, serviceImpl.CreateProject)
           .AddMethod(__Method_ListProjects, serviceImpl.ListProjects)
-          .AddMethod(__Method_CheckProjectAccess, serviceImpl.CheckProjectAccess).Build();
+          .AddMethod(__Method_CheckProjectAccess, serviceImpl.CheckProjectAccess)
+          .AddMethod(__Method_AddProjectMember, serviceImpl.AddProjectMember)
+          .AddMethod(__Method_ListProjectMembers, serviceImpl.ListProjectMembers)
+          .AddMethod(__Method_RemoveProjectMember, serviceImpl.RemoveProjectMember).Build();
     }
 
     /// <summary>Register service method with a service binder with or without implementation. Useful when customizing the service binding logic.
@@ -874,6 +991,9 @@ namespace JiraAi.Contracts.Issues.V1 {
       serviceBinder.AddMethod(__Method_CreateProject, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::JiraAi.Contracts.Issues.V1.CreateProjectRequest, global::JiraAi.Contracts.Issues.V1.CreateProjectResponse>(serviceImpl.CreateProject));
       serviceBinder.AddMethod(__Method_ListProjects, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::JiraAi.Contracts.Issues.V1.ListProjectsRequest, global::JiraAi.Contracts.Issues.V1.ListProjectsResponse>(serviceImpl.ListProjects));
       serviceBinder.AddMethod(__Method_CheckProjectAccess, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::JiraAi.Contracts.Issues.V1.CheckProjectAccessRequest, global::JiraAi.Contracts.Issues.V1.CheckProjectAccessResponse>(serviceImpl.CheckProjectAccess));
+      serviceBinder.AddMethod(__Method_AddProjectMember, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::JiraAi.Contracts.Issues.V1.AddProjectMemberRequest, global::JiraAi.Contracts.Issues.V1.AddProjectMemberResponse>(serviceImpl.AddProjectMember));
+      serviceBinder.AddMethod(__Method_ListProjectMembers, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::JiraAi.Contracts.Issues.V1.ListProjectMembersRequest, global::JiraAi.Contracts.Issues.V1.ListProjectMembersResponse>(serviceImpl.ListProjectMembers));
+      serviceBinder.AddMethod(__Method_RemoveProjectMember, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::JiraAi.Contracts.Issues.V1.RemoveProjectMemberRequest, global::JiraAi.Contracts.Issues.V1.RemoveProjectMemberResponse>(serviceImpl.RemoveProjectMember));
     }
 
   }
