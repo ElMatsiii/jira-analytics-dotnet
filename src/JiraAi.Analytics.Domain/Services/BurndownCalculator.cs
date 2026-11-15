@@ -27,6 +27,14 @@ public class BurndownCalculator : IBurndownCalculator
             .GroupBy(d => d.Date)
             .ToDictionary(g => g.Key, g => g.Last());
 
+        // Value shown for days before the first recorded day: the earliest record if any (scope known
+        // at that point), otherwise the current remaining points.
+        var earliestRecord = snapshot.DailyBurndown
+            .Where(d => !string.IsNullOrEmpty(d.Date))
+            .OrderBy(d => d.Date, StringComparer.Ordinal)
+            .FirstOrDefault();
+        double? lastKnown = null;
+
         for (int dayIndex = 0; dayIndex <= totalDays; dayIndex++)
         {
             var dayDate = startDate.AddDays(dayIndex);
@@ -35,10 +43,15 @@ public class BurndownCalculator : IBurndownCalculator
             // T1-F19-01: Ideal burndown line
             var idealRemaining = Math.Max(0.0, Math.Round(totalPoints - (dayIndex * idealDecrement), 2));
 
-            double actualRemaining;
+            double? actualRemaining;
             double? completedOnDay = null;
 
-            if (recordedByDate.TryGetValue(dateStr, out var recorded))
+            if (dayDate > currentDay)
+            {
+                // A day that has not happened yet has no actual value: it is not drawn.
+                actualRemaining = null;
+            }
+            else if (recordedByDate.TryGetValue(dateStr, out var recorded))
             {
                 // T2-F19-03: Negative completed points clamped to zero
                 actualRemaining = Math.Max(0.0, recorded.ActualRemaining);
@@ -46,14 +59,14 @@ public class BurndownCalculator : IBurndownCalculator
             }
             else
             {
-                if (dayDate <= currentDay)
-                {
-                    actualRemaining = Math.Max(0.0, snapshot.RemainingStoryPoints);
-                }
-                else
-                {
-                    actualRemaining = Math.Max(0.0, snapshot.RemainingStoryPoints);
-                }
+                // A past day without events keeps the last known value (nothing changed that day).
+                actualRemaining = lastKnown
+                    ?? Math.Max(0.0, earliestRecord?.ActualRemaining ?? snapshot.RemainingStoryPoints);
+            }
+
+            if (actualRemaining.HasValue)
+            {
+                lastKnown = actualRemaining;
             }
 
             points.Add(new BurndownPoint(dateStr, dayIndex, idealRemaining, actualRemaining, completedOnDay));

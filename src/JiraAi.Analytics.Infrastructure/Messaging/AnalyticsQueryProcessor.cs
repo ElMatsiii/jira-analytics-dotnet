@@ -205,20 +205,30 @@ public class AnalyticsQueryProcessor : IAnalyticsQueryProcessor
             RemainingPoints = snapshot.RemainingStoryPoints,
             Velocity = velocity,
             HealthScore = healthScore,
-            BurndownData = burndownData.Select(ToDto).ToList(),
+            BurndownData = ToDtos(burndownData, snapshot.RemainingStoryPoints),
             Diagnostics = diagnostics,
             Recommendations = recommendations,
             Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")
         };
     }
 
-    /// <summary>MS3's burndown point → analytics.reply wire DTO (Kafka edge).</summary>
-    public static BurndownPointDto ToDto(BurndownPoint point) => new()
+    /// <summary>MS3's burndown series → analytics.reply wire DTOs (Kafka edge).</summary>
+    public static List<BurndownPointDto> ToDtos(IReadOnlyList<BurndownPoint> points, int currentRemaining)
+    {
+        // TODO(paso 15): send null for days that have not happened yet. analytics.reply requires a
+        // number for actualRemaining until the contract change of commit 10, so future days carry the
+        // last known value (what MS3 sent before), while the local model already marks them as null.
+        var lastKnown = points.LastOrDefault(p => p.ActualRemaining.HasValue)?.ActualRemaining
+            ?? Math.Max(0, currentRemaining);
+        return points.Select(p => ToDto(p, lastKnown)).ToList();
+    }
+
+    public static BurndownPointDto ToDto(BurndownPoint point, double actualWhenUnknown) => new()
     {
         Date = point.Date,
         DayIndex = point.DayIndex,
         IdealRemaining = point.IdealRemaining,
-        ActualRemaining = point.ActualRemaining,
+        ActualRemaining = point.ActualRemaining ?? actualWhenUnknown,
         CompletedOnDay = point.CompletedOnDay
     };
 }

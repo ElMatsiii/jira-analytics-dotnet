@@ -43,7 +43,10 @@ public class AdversarialDomainMetricsTests
             double.IsNaN(point.IdealRemaining).Should().BeFalse("IdealRemaining must not be NaN");
             double.IsInfinity(point.IdealRemaining).Should().BeFalse("IdealRemaining must not be Infinity");
             point.IdealRemaining.Should().Be(0.0);
-            point.ActualRemaining.Should().Be(0.0);
+            if (point.DayIndex <= 5)
+                point.ActualRemaining.Should().Be(0.0);
+            else
+                point.ActualRemaining.Should().BeNull("days after asOfDate have not happened yet");
         }
     }
 
@@ -147,7 +150,8 @@ public class AdversarialDomainMetricsTests
 
         // Assert
         burndown.Should().NotBeEmpty();
-        burndown.All(p => p.ActualRemaining >= 0.0).Should().BeTrue("Remaining points must be non-negative");
+        burndown.Where(p => p.ActualRemaining.HasValue).All(p => p.ActualRemaining >= 0.0).Should().BeTrue("Remaining points must be non-negative");
+        burndown.Where(p => p.DayIndex > 5).Should().OnlyContain(p => p.ActualRemaining == null, "future days are not drawn");
         velocityRate.Should().Be(160.0, "Velocity should accurately reflect 160% completion without crashing");
     }
 

@@ -120,11 +120,29 @@ public class RealSprintDatesTests
     [Fact]
     public void ToDto_CopiesEveryBurndownField()
     {
-        var dto = AnalyticsQueryProcessor.ToDto(new BurndownPoint("2026-11-16", 3, 12.5, 14, 2));
+        var dto = AnalyticsQueryProcessor.ToDto(new BurndownPoint("2026-11-16", 3, 12.5, 14, 2), actualWhenUnknown: 99);
 
         dto.Should().BeEquivalentTo(new BurndownPointDto
         {
             Date = "2026-11-16", DayIndex = 3, IdealRemaining = 12.5, ActualRemaining = 14, CompletedOnDay = 2
         });
+    }
+
+    [Fact]
+    public void ToDtos_FutureDaysCarryTheLastKnownValueUntilTheContractAllowsNull()
+    {
+        var points = new List<BurndownPoint>
+        {
+            new("2026-11-16", 0, 20, 20, null),
+            new("2026-11-17", 1, 15, 12, 8),
+            new("2026-11-18", 2, 10, null, null),
+            new("2026-11-19", 3, 5, null, null)
+        };
+
+        var dtos = AnalyticsQueryProcessor.ToDtos(points, currentRemaining: 30);
+
+        dtos.Select(d => d.ActualRemaining).Should().Equal(20, 12, 12, 12);
+        AnalyticsQueryProcessor.ToDtos(new List<BurndownPoint> { new("2026-11-20", 0, 8, null, null) }, 7)
+            .Single().ActualRemaining.Should().Be(7, "with no known day yet, the current remaining is used");
     }
 }
