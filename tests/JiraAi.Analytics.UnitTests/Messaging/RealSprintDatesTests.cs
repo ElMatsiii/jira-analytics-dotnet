@@ -118,6 +118,23 @@ public class RealSprintDatesTests
     }
 
     [Fact]
+    public async Task Query_RunningSprintWithoutClosedSprints_ReportsZeroVelocity()
+    {
+        _directory.With(new SprintInfo("sprint-run", "project-1", "Sprint en curso",
+            Today.AddDays(-3), Today.AddDays(10), SprintLifecycleStatus.Active));
+        await CreateEventProcessor().ProcessEnvelopeAsync(Created("sprint-run", 6));
+        var snapshot = await _snapshots.GetBySprintIdAsync("sprint-run");
+        snapshot!.CompletedStoryPoints = 6; // done in the current sprint, not a closed-sprint velocity
+        await _snapshots.UpsertSnapshotAsync(snapshot);
+
+        var reply = await CreateQueryProcessor().ComputeReplyAsync(
+            new AnalyticsQueryDto { SprintId = "sprint-run", ProjectId = "project-1", QueryType = "BURNDOWN" }, "corr-3");
+
+        reply.Velocity.Should().Be(0, "the average only counts closed sprints");
+        reply.CompletedPoints.Should().Be(6);
+    }
+
+    [Fact]
     public void ToDto_CopiesEveryBurndownField()
     {
         var dto = AnalyticsQueryProcessor.ToDto(new BurndownPoint("2026-11-16", 3, 12.5, 14, 2), actualWhenUnknown: 99);

@@ -175,7 +175,7 @@ public class AnalyticsQueryProcessor : IAnalyticsQueryProcessor
         var velocityHistory = await _velocityRepository.GetRecentCompletedSprintsAsync(
             snapshot.ProjectId, 3, cancellationToken);
 
-        var velocity = _velocityCalculator.CalculateRollingVelocity(velocityHistory, snapshot.CompletedStoryPoints);
+        var velocity = _velocityCalculator.CalculateRollingVelocity(velocityHistory);
         var healthScore = _healthScoreCalculator.CalculateHealthScore(snapshot);
         var (diagnostics, recommendations) = _riskEngine.GenerateDiagnosticsAndRecommendations(snapshot);
 

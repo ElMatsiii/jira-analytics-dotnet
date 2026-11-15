@@ -210,8 +210,8 @@ public class AdversarialDomainMetricsTests
     public void VelocityCalculator_EmptyHistory_ReturnsZeroWithoutError()
     {
         // Act
-        var velocityWithZero = _velocityCalculator.CalculateRollingVelocity(new List<VelocityRecordDocument>(), currentCompletedPoints: 0);
-        var velocityWithNull = _velocityCalculator.CalculateRollingVelocity(null, currentCompletedPoints: 0);
+        var velocityWithZero = _velocityCalculator.CalculateRollingVelocity(new List<VelocityRecordDocument>());
+        var velocityWithNull = _velocityCalculator.CalculateRollingVelocity(null);
 
         // Assert
         velocityWithZero.Should().Be(0.0);
@@ -236,10 +236,13 @@ public class AdversarialDomainMetricsTests
     }
 
     [Fact]
-    public void VelocityCalculator_NegativeCurrentCompletedPoints_ClampedToZero()
+    public void VelocityCalculator_NegativeCompletedPointsInHistory_ClampedToZero()
     {
-        // Act
-        var velocity = _velocityCalculator.CalculateRollingVelocity(new List<VelocityRecordDocument>(), currentCompletedPoints: -25);
+        // Act: a corrupt closed-sprint record must not drag the average below zero
+        var velocity = _velocityCalculator.CalculateRollingVelocity(new List<VelocityRecordDocument>
+        {
+            new() { SprintId = "bad", CompletedStoryPoints = -25, CompletedDate = DateTime.UtcNow }
+        });
 
         // Assert
         velocity.Should().Be(0.0);
