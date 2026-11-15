@@ -176,7 +176,9 @@ public class AnalyticsQueryProcessor : IAnalyticsQueryProcessor
             snapshot.ProjectId, 3, cancellationToken);
 
         var velocity = _velocityCalculator.CalculateRollingVelocity(velocityHistory);
+        var velocitySampleSize = VelocityCalculator.RollingSampleSize(velocityHistory);
         var healthScore = _healthScoreCalculator.CalculateHealthScore(snapshot);
+        var healthStatus = SprintHealthRules.Classify(snapshot, healthScore);
         var (diagnostics, recommendations) = _riskEngine.GenerateDiagnosticsAndRecommendations(snapshot);
 
         if (isInitializing)
@@ -204,8 +206,10 @@ public class AnalyticsQueryProcessor : IAnalyticsQueryProcessor
             CompletedPoints = snapshot.CompletedStoryPoints,
             RemainingPoints = snapshot.RemainingStoryPoints,
             Velocity = velocity,
+            VelocitySampleSize = velocitySampleSize,
             HealthScore = healthScore,
-            BurndownData = ToDtos(burndownData, snapshot.RemainingStoryPoints),
+            HealthStatus = SprintHealthRules.ToWireValue(healthStatus),
+            BurndownData = ToDtos(burndownData),
             Diagnostics = diagnostics,
             Recommendations = recommendations,
             Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")
@@ -213,22 +217,16 @@ public class AnalyticsQueryProcessor : IAnalyticsQueryProcessor
     }
 
     /// <summary>MS3's burndown series → analytics.reply wire DTOs (Kafka edge).</summary>
-    public static List<BurndownPointDto> ToDtos(IReadOnlyList<BurndownPoint> points, int currentRemaining)
-    {
-        // TODO(paso 15): send null for days that have not happened yet. analytics.reply requires a
-        // number for actualRemaining until the contract change of commit 10, so future days carry the
-        // last known value (what MS3 sent before), while the local model already marks them as null.
-        var lastKnown = points.LastOrDefault(p => p.ActualRemaining.HasValue)?.ActualRemaining
-            ?? Math.Max(0, currentRemaining);
-        return points.Select(p => ToDto(p, lastKnown)).ToList();
-    }
+    /// <remarks>Days that have not happened yet keep actualRemaining = null, so the real line ends today.</remarks>
+    public static List<BurndownPointDto> ToDtos(IReadOnlyList<BurndownPoint> points) =>
+        points.Select(ToDto).ToList();
 
-    public static BurndownPointDto ToDto(BurndownPoint point, double actualWhenUnknown) => new()
+    public static BurndownPointDto ToDto(BurndownPoint point) => new()
     {
         Date = point.Date,
         DayIndex = point.DayIndex,
         IdealRemaining = point.IdealRemaining,
-        ActualRemaining = point.ActualRemaining ?? actualWhenUnknown,
+        ActualRemaining = point.ActualRemaining,
         CompletedOnDay = point.CompletedOnDay
     };
 }

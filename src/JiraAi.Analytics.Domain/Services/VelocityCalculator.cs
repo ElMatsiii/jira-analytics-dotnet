@@ -14,11 +14,21 @@ public interface IVelocityCalculator
 
 public class VelocityCalculator : IVelocityCalculator
 {
+    /// <summary>How many of the most recent closed sprints the rolling velocity averages.</summary>
+    public const int RollingWindowSize = 3;
+
+    /// <summary>
+    /// Number of closed sprints that <see cref="CalculateRollingVelocity"/> averages (velocitySampleSize
+    /// in analytics.reply). 0 means there is no closed sprint, so a velocity of 0 is not a real average.
+    /// </summary>
+    public static int RollingSampleSize(IEnumerable<VelocityRecordDocument>? history) =>
+        Math.Min(RollingWindowSize, history?.Count() ?? 0);
+
     public double CalculateRollingVelocity(IEnumerable<VelocityRecordDocument>? history)
     {
         var recentList = (history ?? Enumerable.Empty<VelocityRecordDocument>())
             .OrderByDescending(x => x.CompletedDate)
-            .Take(3)
+            .Take(RollingWindowSize)
             .ToList();
 
         if (recentList.Count == 0)

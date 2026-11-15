@@ -137,7 +137,7 @@ public class RealSprintDatesTests
     [Fact]
     public void ToDto_CopiesEveryBurndownField()
     {
-        var dto = AnalyticsQueryProcessor.ToDto(new BurndownPoint("2026-11-16", 3, 12.5, 14, 2), actualWhenUnknown: 99);
+        var dto = AnalyticsQueryProcessor.ToDto(new BurndownPoint("2026-11-16", 3, 12.5, 14, 2));
 
         dto.Should().BeEquivalentTo(new BurndownPointDto
         {
@@ -146,7 +146,7 @@ public class RealSprintDatesTests
     }
 
     [Fact]
-    public void ToDtos_FutureDaysCarryTheLastKnownValueUntilTheContractAllowsNull()
+    public void ToDtos_FutureDaysAreSentAsNull()
     {
         var points = new List<BurndownPoint>
         {
@@ -156,10 +156,34 @@ public class RealSprintDatesTests
             new("2026-11-19", 3, 5, null, null)
         };
 
-        var dtos = AnalyticsQueryProcessor.ToDtos(points, currentRemaining: 30);
+        var dtos = AnalyticsQueryProcessor.ToDtos(points);
 
-        dtos.Select(d => d.ActualRemaining).Should().Equal(20, 12, 12, 12);
-        AnalyticsQueryProcessor.ToDtos(new List<BurndownPoint> { new("2026-11-20", 0, 8, null, null) }, 7)
-            .Single().ActualRemaining.Should().Be(7, "with no known day yet, the current remaining is used");
+        dtos.Select(d => d.ActualRemaining).Should().Equal(20, 12, null, null);
+        // The ideal line still covers every day.
+        dtos.Select(d => d.IdealRemaining).Should().Equal(20, 15, 10, 5);
+    }
+
+    [Fact]
+    public void ReplyJson_WritesNullActualRemainingAndTheNewFields()
+    {
+        var reply = new AnalyticsReplyDto
+        {
+            SprintId = "sprint-1",
+            VelocitySampleSize = 0,
+            HealthStatus = "NOT_STARTED",
+            BurndownData = AnalyticsQueryProcessor.ToDtos(new List<BurndownPoint> { new("2026-11-20", 0, 8, null, null) })
+        };
+
+        using var json = System.Text.Json.JsonDocument.Parse(System.Text.Json.JsonSerializer.Serialize(reply));
+        var root = json.RootElement;
+
+        var point = root.GetProperty("burndownData")[0];
+        point.TryGetProperty("actualRemaining", out var actual).Should().BeTrue("the key is required by analytics.reply");
+        actual.ValueKind.Should().Be(System.Text.Json.JsonValueKind.Null);
+        root.GetProperty("velocitySampleSize").GetInt32().Should().Be(0, "0 is meaningful and must be sent");
+        root.GetProperty("healthStatus").GetString().Should().Be("NOT_STARTED");
+
+        var legacy = System.Text.Json.JsonSerializer.Serialize(new AnalyticsReplyDto { SprintId = "sprint-1" });
+        legacy.Should().NotContain("healthStatus").And.NotContain("velocitySampleSize");
     }
 }

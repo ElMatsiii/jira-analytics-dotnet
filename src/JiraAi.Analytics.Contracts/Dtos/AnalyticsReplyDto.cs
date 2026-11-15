@@ -32,8 +32,18 @@ public class AnalyticsReplyDto
     [JsonPropertyName("velocity")]
     public double Velocity { get; set; }
 
+    /// <summary>Closed sprints averaged in velocity; 0 = no closed sprint yet (velocity 0 is not an average).</summary>
+    [JsonPropertyName("velocitySampleSize")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public int? VelocitySampleSize { get; set; }
+
     [JsonPropertyName("healthScore")]
     public double HealthScore { get; set; }
+
+    /// <summary>HEALTHY | AT_RISK | CRITICAL | NOT_STARTED | NO_SCOPE, classified by MS3.</summary>
+    [JsonPropertyName("healthStatus")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? HealthStatus { get; set; }
 
     [JsonPropertyName("burndownData")]
     public List<BurndownPointDto> BurndownData { get; set; } = new();
@@ -59,8 +69,9 @@ public class BurndownPointDto
     [JsonPropertyName("idealRemaining")]
     public double IdealRemaining { get; set; }
 
+    /// <summary>Observed remaining points; null (always written, the key is required) for future days.</summary>
     [JsonPropertyName("actualRemaining")]
-    public double ActualRemaining { get; set; }
+    public double? ActualRemaining { get; set; }
 
     [JsonPropertyName("completedOnDay")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
