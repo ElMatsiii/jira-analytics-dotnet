@@ -11,6 +11,7 @@ using JiraAi.Analytics.Infrastructure.Persistence;
 using JiraAi.Contracts.Sprints.V1;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
+using JiraAi.Analytics.UnitTests.TestDoubles;
 using Xunit;
 
 public class IssuesEventProcessorTests
@@ -23,13 +24,14 @@ public class IssuesEventProcessorTests
     public IssuesEventProcessorTests()
     {
         _alertClient.TriggerSprintAlertAsync(
-            Arg.Any<string>(), Arg.Any<AlertType>(), Arg.Any<AlertSeverity>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+            Arg.Any<string>(), Arg.Any<RiskType>(), Arg.Any<RiskSeverity>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(AlertResult.Succeeded("alert-123")));
 
         _sut = new IssuesEventProcessor(
             _snapshotRepo,
             _riskEngine,
             _alertClient,
+            TestSprintSync.Create(_snapshotRepo, new InMemoryVelocityRepository()),
             NullLogger<IssuesEventProcessor>.Instance);
     }
 
@@ -300,11 +302,11 @@ public class IssuesEventProcessorTests
             }
         });
 
-        // Assert: AlertService.TriggerSprintAlert was invoked with AlertType.ScopeCreep
+        // Assert: AlertService.TriggerSprintAlert was invoked with RiskType.ScopeCreep
         await _alertClient.Received().TriggerSprintAlertAsync(
             "sprint-sc",
-            AlertType.ScopeCreep,
-            Arg.Any<AlertSeverity>(),
+            RiskType.ScopeCreep,
+            Arg.Any<RiskSeverity>(),
             Arg.Any<string>(),
             Arg.Any<string>(),
             Arg.Any<CancellationToken>());

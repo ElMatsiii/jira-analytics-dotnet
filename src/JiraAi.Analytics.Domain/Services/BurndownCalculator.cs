@@ -1,20 +1,19 @@
 namespace JiraAi.Analytics.Domain.Services;
 
-using JiraAi.Analytics.Contracts.Dtos;
 using JiraAi.Analytics.Domain.Models;
 
 public interface IBurndownCalculator
 {
-    List<BurndownPointDto> CalculateBurndownSeries(SprintSnapshotDocument snapshot, DateTime? asOfDate = null);
+    List<BurndownPoint> CalculateBurndownSeries(SprintSnapshotDocument snapshot, DateTime? asOfDate = null);
 }
 
 public class BurndownCalculator : IBurndownCalculator
 {
-    public List<BurndownPointDto> CalculateBurndownSeries(SprintSnapshotDocument snapshot, DateTime? asOfDate = null)
+    public List<BurndownPoint> CalculateBurndownSeries(SprintSnapshotDocument snapshot, DateTime? asOfDate = null)
     {
         ArgumentNullException.ThrowIfNull(snapshot);
 
-        var points = new List<BurndownPointDto>();
+        var points = new List<BurndownPoint>();
         var startDate = snapshot.StartDate.Date;
         var endDate = snapshot.EndDate.Date;
 
@@ -57,14 +56,7 @@ public class BurndownCalculator : IBurndownCalculator
                 }
             }
 
-            points.Add(new BurndownPointDto
-            {
-                Date = dateStr,
-                DayIndex = dayIndex,
-                IdealRemaining = idealRemaining,
-                ActualRemaining = actualRemaining,
-                CompletedOnDay = completedOnDay
-            });
+            points.Add(new BurndownPoint(dateStr, dayIndex, idealRemaining, actualRemaining, completedOnDay));
         }
 
         return points;

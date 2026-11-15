@@ -18,6 +18,7 @@ using JiraAi.Contracts.Sprints.V1;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using NSubstitute;
+using JiraAi.Analytics.UnitTests.TestDoubles;
 using Xunit;
 
 public class ChallengerAdversarialTests
@@ -62,7 +63,8 @@ public class ChallengerAdversarialTests
             new RiskDetectionEngine(),
             producer,
             options,
-            NullLogger<AnalyticsQueryProcessor>.Instance);
+            NullLogger<AnalyticsQueryProcessor>.Instance,
+            TestSprintSync.Create(snapshotRepo, velocityRepo));
 
         var sprintId = Guid.NewGuid().ToString();
         var headerCorrId = Guid.NewGuid().ToString();
@@ -119,7 +121,8 @@ public class ChallengerAdversarialTests
             new RiskDetectionEngine(),
             producer,
             options,
-            NullLogger<AnalyticsQueryProcessor>.Instance);
+            NullLogger<AnalyticsQueryProcessor>.Instance,
+            TestSprintSync.Create(snapshotRepo, velocityRepo));
 
         var sprintId = Guid.NewGuid().ToString();
         var bodyCorrId = Guid.NewGuid().ToString();
@@ -171,7 +174,8 @@ public class ChallengerAdversarialTests
             new RiskDetectionEngine(),
             producer,
             options,
-            NullLogger<AnalyticsQueryProcessor>.Instance);
+            NullLogger<AnalyticsQueryProcessor>.Instance,
+            TestSprintSync.Create(snapshotRepo, velocityRepo));
 
         var sprintId = Guid.NewGuid().ToString();
 
@@ -225,7 +229,8 @@ public class ChallengerAdversarialTests
             new RiskDetectionEngine(),
             producer,
             options,
-            NullLogger<AnalyticsQueryProcessor>.Instance);
+            NullLogger<AnalyticsQueryProcessor>.Instance,
+            TestSprintSync.Create(snapshotRepo, velocityRepo));
 
         var nonexistentSprintId = Guid.NewGuid().ToString();
         var correlationId = Guid.NewGuid().ToString();
@@ -274,7 +279,8 @@ public class ChallengerAdversarialTests
             new RiskDetectionEngine(),
             Substitute.For<IKafkaProducerWrapper>(),
             Options.Create(new KafkaOptions()),
-            NullLogger<AnalyticsQueryProcessor>.Instance);
+            NullLogger<AnalyticsQueryProcessor>.Instance,
+            TestSprintSync.Create(new InMemorySnapshotRepository(), new InMemoryVelocityRepository()));
 
         // Act: Should not throw any exception
         var result = await sut.ProcessQueryAsync(malformedJson);
@@ -295,6 +301,7 @@ public class ChallengerAdversarialTests
             new InMemorySnapshotRepository(),
             new RiskDetectionEngine(),
             Substitute.For<IAlertClientService>(),
+            TestSprintSync.Create(new InMemorySnapshotRepository(), new InMemoryVelocityRepository()),
             NullLogger<IssuesEventProcessor>.Instance);
 
         // Act: Should not throw any exception
@@ -391,8 +398,8 @@ public class ChallengerAdversarialTests
         {
             var res = await sut.TriggerSprintAlertAsync(
                 sprintId,
-                AlertType.ScopeCreep,
-                AlertSeverity.Critical,
+                RiskType.ScopeCreep,
+                RiskSeverity.Critical,
                 $"Scope creep burst #{i}",
                 "Review sprint scope");
             results.Add(res);
@@ -444,8 +451,8 @@ public class ChallengerAdversarialTests
         // Act: Must not throw unhandled exception
         var result = await sut.TriggerSprintAlertAsync(
             sprintId,
-            AlertType.VelocityDeficit,
-            AlertSeverity.Warning,
+            RiskType.VelocityDeficit,
+            RiskSeverity.Warning,
             "Velocity deficit",
             "Adjust commitments");
 
@@ -481,8 +488,8 @@ public class ChallengerAdversarialTests
         var beforeCall = DateTime.UtcNow;
         await sut.TriggerSprintAlertAsync(
             Guid.NewGuid().ToString(),
-            AlertType.BottleneckDetected,
-            AlertSeverity.Info,
+            RiskType.BottleneckDetected,
+            RiskSeverity.Info,
             "Bottleneck alert",
             "Pair on tasks");
         var afterCall = DateTime.UtcNow;
@@ -527,8 +534,8 @@ public class ChallengerAdversarialTests
         // Act: Should not crash caller
         var result = await sut.TriggerSprintAlertAsync(
             Guid.NewGuid().ToString(),
-            AlertType.ScopeCreep,
-            AlertSeverity.Critical,
+            RiskType.ScopeCreep,
+            RiskSeverity.Critical,
             "Creep",
             "Rec");
 

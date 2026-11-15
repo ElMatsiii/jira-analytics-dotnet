@@ -74,14 +74,16 @@ public class RepositoryTests
     }
 
     [Fact]
-    public async Task InMemorySnapshotRepository_GetActiveSnapshots_ReturnsOnlyActive()
+    public async Task InMemorySnapshotRepository_GetOpenSnapshots_ExcludesClosedSprints()
     {
         var repo = new InMemorySnapshotRepository();
         await repo.UpsertSnapshotAsync(new SprintSnapshotDocument { SprintId = "s-act", Status = "ACTIVE" });
+        await repo.UpsertSnapshotAsync(new SprintSnapshotDocument { SprintId = "s-pln", Status = "PLANNED" });
         await repo.UpsertSnapshotAsync(new SprintSnapshotDocument { SprintId = "s-cmp", Status = "COMPLETED" });
+        await repo.UpsertSnapshotAsync(new SprintSnapshotDocument { SprintId = "s-cnl", Status = "CANCELLED" });
 
-        var active = await repo.GetActiveSnapshotsAsync();
-        active.Should().ContainSingle(s => s.SprintId == "s-act");
+        var open = await repo.GetOpenSnapshotsAsync();
+        open.Select(s => s.SprintId).Should().BeEquivalentTo(new[] { "s-act", "s-pln" });
     }
 
     [Fact]

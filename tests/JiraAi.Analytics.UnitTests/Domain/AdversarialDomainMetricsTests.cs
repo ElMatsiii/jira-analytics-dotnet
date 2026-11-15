@@ -359,7 +359,7 @@ public class AdversarialDomainMetricsTests
         var healthScore = _healthScoreCalculator.CalculateHealthScore(snapshot, asOfDate: asOf);
 
         // Assert: Exactly 20% must NOT trigger scope creep
-        risks.Should().NotContain(r => r.Type == AlertType.ScopeCreep, "Exactly 20% scope creep is within tolerance");
+        risks.Should().NotContain(r => r.Type == RiskType.ScopeCreep, "Exactly 20% scope creep is within tolerance");
         healthScore.Should().Be(100.0, "Exactly 20% scope creep must not incur a health penalty");
     }
 
@@ -387,9 +387,9 @@ public class AdversarialDomainMetricsTests
         var healthScore = _healthScoreCalculator.CalculateHealthScore(snapshot, asOfDate: asOf);
 
         // Assert: > 20% MUST trigger scope creep alert and penalty
-        risks.Should().ContainSingle(r => r.Type == AlertType.ScopeCreep, "Scope creep > 20% must trigger alert");
-        var creepRisk = risks.First(r => r.Type == AlertType.ScopeCreep);
-        creepRisk.Severity.Should().Be(AlertSeverity.Warning);
+        risks.Should().ContainSingle(r => r.Type == RiskType.ScopeCreep, "Scope creep > 20% must trigger alert");
+        var creepRisk = risks.First(r => r.Type == RiskType.ScopeCreep);
+        creepRisk.Severity.Should().Be(RiskSeverity.Warning);
         creepRisk.MetricValue.Should().Be(20.1);
 
         // Health score should incur the -20 penalty
@@ -419,7 +419,7 @@ public class AdversarialDomainMetricsTests
         var healthScore = _healthScoreCalculator.CalculateHealthScore(snapshot);
 
         // Assert: Exactly 50% does not exceed the threshold (> 50%)
-        risks.Should().NotContain(r => r.Type == AlertType.BottleneckDetected, "Exactly 50% WIP is within threshold");
+        risks.Should().NotContain(r => r.Type == RiskType.BottleneckDetected, "Exactly 50% WIP is within threshold");
         // No bottleneck penalty applied (score only affected by pace)
     }
 
@@ -445,10 +445,10 @@ public class AdversarialDomainMetricsTests
         var risks = _riskDetectionEngine.EvaluateRisks(snapshot);
 
         // Assert: 51% MUST trigger bottleneck alert
-        risks.Should().ContainSingle(r => r.Type == AlertType.BottleneckDetected);
-        var bottleneck = risks.First(r => r.Type == AlertType.BottleneckDetected);
+        risks.Should().ContainSingle(r => r.Type == RiskType.BottleneckDetected);
+        var bottleneck = risks.First(r => r.Type == RiskType.BottleneckDetected);
         bottleneck.MetricValue.Should().Be(51.0);
-        bottleneck.Severity.Should().Be(AlertSeverity.Info);
+        bottleneck.Severity.Should().Be(RiskSeverity.Info);
     }
 
     [Fact]
@@ -472,7 +472,7 @@ public class AdversarialDomainMetricsTests
         var healthScore = _healthScoreCalculator.CalculateHealthScore(snapshot);
 
         // Assert: No divide by zero exception
-        risks.Should().NotContain(r => r.Type == AlertType.BottleneckDetected);
+        risks.Should().NotContain(r => r.Type == RiskType.BottleneckDetected);
         healthScore.Should().Be(100.0);
     }
 

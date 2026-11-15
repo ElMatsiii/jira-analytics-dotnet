@@ -27,9 +27,9 @@ public class RiskDetectionEngineTests
         var risks = _sut.EvaluateRisks(snapshot);
 
         // Assert
-        risks.Should().ContainSingle(r => r.Type == AlertType.ScopeCreep);
-        var risk = risks.First(r => r.Type == AlertType.ScopeCreep);
-        risk.Severity.Should().Be(AlertSeverity.Warning);
+        risks.Should().ContainSingle(r => r.Type == RiskType.ScopeCreep);
+        var risk = risks.First(r => r.Type == RiskType.ScopeCreep);
+        risk.Severity.Should().Be(RiskSeverity.Warning);
         risk.MetricValue.Should().Be(37.5);
         risk.Message.Should().Contain("Scope creep of 37.5%");
     }
@@ -51,7 +51,7 @@ public class RiskDetectionEngineTests
         var risks = _sut.EvaluateRisks(snapshot);
 
         // Assert
-        risks.Should().NotContain(r => r.Type == AlertType.ScopeCreep);
+        risks.Should().NotContain(r => r.Type == RiskType.ScopeCreep);
     }
 
     [Fact]
@@ -77,9 +77,9 @@ public class RiskDetectionEngineTests
         var risks = _sut.EvaluateRisks(snapshot, asOfDate: asOf);
 
         // Assert
-        risks.Should().Contain(r => r.Type == AlertType.VelocityDeficit);
-        var risk = risks.First(r => r.Type == AlertType.VelocityDeficit);
-        risk.Severity.Should().Be(AlertSeverity.Warning);
+        risks.Should().Contain(r => r.Type == RiskType.VelocityDeficit);
+        var risk = risks.First(r => r.Type == RiskType.VelocityDeficit);
+        risk.Severity.Should().Be(RiskSeverity.Warning);
         risk.Message.Should().Contain("Velocity deficit detected");
     }
 
@@ -100,7 +100,7 @@ public class RiskDetectionEngineTests
         };
 
         var risks = _sut.EvaluateRisks(snapshot);
-        risks.Should().Contain(r => r.Type == AlertType.BottleneckDetected);
+        risks.Should().Contain(r => r.Type == RiskType.BottleneckDetected);
     }
 
     [Fact]

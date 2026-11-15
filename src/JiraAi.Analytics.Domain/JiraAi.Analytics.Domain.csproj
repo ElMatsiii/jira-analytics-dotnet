@@ -6,10 +6,8 @@
     <RootNamespace>JiraAi.Analytics.Domain</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\JiraAi.Analytics.Contracts\JiraAi.Analytics.Contracts.csproj" />
-  </ItemGroup>
-
+  <!-- No reference to JiraAi.Analytics.Contracts: the domain uses its own model; wire types are
+       converted in Infrastructure (interoperability rule). -->
   <ItemGroup>
     <PackageReference Include="MongoDB.Bson" Version="2.28.0" />
   </ItemGroup>

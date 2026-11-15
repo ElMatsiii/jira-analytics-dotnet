@@ -19,12 +19,32 @@ public class AlertClientOptions
     public int MaxRetries { get; set; } = 3;
 }
 
+/// <summary>Converts MS3's local risk model to MS2's AlertService proto enums (gRPC edge).</summary>
+public static class AlertMapping
+{
+    public static AlertType ToProto(RiskType type) => type switch
+    {
+        RiskType.ScopeCreep => AlertType.ScopeCreep,
+        RiskType.VelocityDeficit => AlertType.VelocityDeficit,
+        RiskType.BottleneckDetected => AlertType.BottleneckDetected,
+        _ => AlertType.Unspecified
+    };
+
+    public static AlertSeverity ToProto(RiskSeverity severity) => severity switch
+    {
+        RiskSeverity.Info => AlertSeverity.Info,
+        RiskSeverity.Warning => AlertSeverity.Warning,
+        RiskSeverity.Critical => AlertSeverity.Critical,
+        _ => AlertSeverity.Unspecified
+    };
+}
+
 public interface IAlertClientService
 {
     Task<AlertResult> TriggerSprintAlertAsync(
         string sprintId,
-        AlertType type,
-        AlertSeverity severity,
+        RiskType type,
+        RiskSeverity severity,
         string message,
         string recommendation,
         CancellationToken cancellationToken = default);
@@ -36,7 +56,7 @@ public class AlertClientService : IAlertClientService
     private readonly IAlertRepository? _alertRepository;
     private readonly AlertClientOptions _options;
     private readonly ILogger<AlertClientService> _logger;
-    private readonly ConcurrentDictionary<(string SprintId, AlertType Type), DateTime> _lastAlertDispatches = new();
+    private readonly ConcurrentDictionary<(string SprintId, RiskType Type), DateTime> _lastAlertDispatches = new();
     private readonly AsyncRetryPolicy _retryPolicy;
 
     public AlertClientService(
@@ -70,8 +90,8 @@ public class AlertClientService : IAlertClientService
 
     public async Task<AlertResult> TriggerSprintAlertAsync(
         string sprintId,
-        AlertType type,
-        AlertSeverity severity,
+        RiskType type,
+        RiskSeverity severity,
         string message,
         string recommendation,
         CancellationToken cancellationToken = default)
@@ -105,8 +125,8 @@ public class AlertClientService : IAlertClientService
         var request = new TriggerSprintAlertRequest
         {
             SprintId = sprintId,
-            Type = type,
-            Severity = severity,
+            Type = AlertMapping.ToProto(type),
+            Severity = AlertMapping.ToProto(severity),
             Message = message ?? string.Empty,
             Recommendation = recommendation ?? string.Empty
         };
