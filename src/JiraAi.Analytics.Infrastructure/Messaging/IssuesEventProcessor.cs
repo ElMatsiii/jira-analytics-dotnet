@@ -109,8 +109,9 @@ public class IssuesEventProcessor : IIssuesEventProcessor
         var snapshot = await _snapshotRepository.GetBySprintIdAsync(payload.SprintId, cancellationToken);
         if (snapshot == null)
         {
+            // The commitment comes from MS2 when the sprint starts (SprintSnapshotRules.ApplyCommitment),
+            // not from the first issue that happens to arrive.
             snapshot = await _sprintSync.CreateSnapshotAsync(payload.SprintId, payload.ProjectId, cancellationToken);
-            snapshot.InitialCommittedPoints = Math.Max(0, payload.StoryPoints);
         }
         else
         {
@@ -205,11 +206,6 @@ public class IssuesEventProcessor : IIssuesEventProcessor
         else
         {
             snapshot.RemainingStoryPoints += points;
-        }
-
-        if (snapshot.InitialCommittedPoints == 0)
-        {
-            snapshot.InitialCommittedPoints = snapshot.TotalStoryPoints;
         }
     }
 

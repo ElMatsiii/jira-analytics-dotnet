@@ -14,13 +14,18 @@ public enum SprintLifecycleStatus
 /// Sprint data MS3 needs from MS2 (dates, name, status), converted from MS2's gRPC Sprint message
 /// to MS3's own model (interoperability rule). Dates are UTC.
 /// </summary>
+/// <param name="CommittedStoryPoints">
+/// Story points MS2 fixed when the sprint was started (Sprint.total_story_points). While the sprint is
+/// ACTIVE it is the team's commitment; it is 0 while PLANNED and MS2 overwrites it when completing.
+/// </param>
 public sealed record SprintInfo(
     string SprintId,
     string ProjectId,
     string Name,
     DateTime StartDate,
     DateTime EndDate,
-    SprintLifecycleStatus Status)
+    SprintLifecycleStatus Status,
+    int CommittedStoryPoints = 0)
 {
     /// <summary>Status as stored in <see cref="SprintSnapshotDocument.Status"/>.</summary>
     public string StatusName => Status switch

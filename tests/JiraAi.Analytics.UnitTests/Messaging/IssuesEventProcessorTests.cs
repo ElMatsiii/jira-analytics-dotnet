@@ -19,6 +19,7 @@ public class IssuesEventProcessorTests
     private readonly InMemorySnapshotRepository _snapshotRepo = new();
     private readonly IRiskDetectionEngine _riskEngine = new RiskDetectionEngine();
     private readonly IAlertClientService _alertClient = Substitute.For<IAlertClientService>();
+    private readonly FakeSprintDirectory _directory = new();
     private readonly IssuesEventProcessor _sut;
 
     public IssuesEventProcessorTests()
@@ -31,7 +32,7 @@ public class IssuesEventProcessorTests
             _snapshotRepo,
             _riskEngine,
             _alertClient,
-            TestSprintSync.Create(_snapshotRepo, new InMemoryVelocityRepository()),
+            TestSprintSync.Create(_snapshotRepo, new InMemoryVelocityRepository(), _directory),
             NullLogger<IssuesEventProcessor>.Instance);
     }
 
@@ -274,7 +275,11 @@ public class IssuesEventProcessorTests
     [Fact]
     public async Task ProcessEnvelope_ScopeCreep_TriggersAlertClient()
     {
-        // 1. Create sprint with initial 10 points
+        // MS2 started the sprint with 10 committed points.
+        _directory.With(new SprintInfo("sprint-sc", "project-1", "Sprint SC", DateTime.UtcNow.Date.AddDays(-2),
+            DateTime.UtcNow.Date.AddDays(8), SprintLifecycleStatus.Active, CommittedStoryPoints: 10));
+
+        // 1. The committed issue (10 points)
         await _sut.ProcessEnvelopeAsync(new IssueEventEnvelope
         {
             EventId = "evt-sc-1",

@@ -79,7 +79,8 @@ public class SprintDirectoryClient : ISprintDirectory
             sprint.Name,
             start,
             end.Value,
-            ToLifecycle(sprint.Status));
+            ToLifecycle(sprint.Status),
+            Math.Max(0, sprint.TotalStoryPoints));
     }
 
     public static SprintLifecycleStatus ToLifecycle(SprintStatus status) => status switch

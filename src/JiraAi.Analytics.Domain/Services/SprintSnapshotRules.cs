@@ -67,7 +67,40 @@ public static class SprintSnapshotRules
             snapshot.Status = info.StatusName;
             changed = true;
         }
+        if (ApplyCommitment(snapshot, info))
+        {
+            changed = true;
+        }
         return changed;
+    }
+
+    /// <summary>
+    /// The commitment (base of the scope-creep check) is the sprint's points when it was started, which
+    /// MS2 fixes in StartSprint. Issues added while planning are not scope creep, so a PLANNED sprint has
+    /// no commitment yet. A closed snapshot keeps its commitment: on completion MS2 overwrites its total.
+    /// Returns true if the snapshot changed.
+    /// </summary>
+    public static bool ApplyCommitment(SprintSnapshotDocument snapshot, SprintInfo info)
+    {
+        ArgumentNullException.ThrowIfNull(snapshot);
+        ArgumentNullException.ThrowIfNull(info);
+
+        if (SnapshotStatus.IsClosed(snapshot.Status))
+        {
+            return false;
+        }
+        var commitment = info.Status switch
+        {
+            SprintLifecycleStatus.Planned => 0,
+            SprintLifecycleStatus.Active when info.CommittedStoryPoints > 0 => info.CommittedStoryPoints,
+            _ => snapshot.InitialCommittedPoints // unknown, or started without points: keep what we had
+        };
+        if (snapshot.InitialCommittedPoints == commitment)
+        {
+            return false;
+        }
+        snapshot.InitialCommittedPoints = commitment;
+        return true;
     }
 
     /// <summary>True when MS2 reports the sprint completed and MS3 has not closed its snapshot yet.</summary>
